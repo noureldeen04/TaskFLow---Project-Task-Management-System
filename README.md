@@ -1,6 +1,6 @@
 PROJECT NAME : TaskFLow--Project-Task-Management-System
 
-INSTRUCTOR NAME : Ayed Ali
+Instructor name  : Ayed Ali
 
 Introduction and idea :  
 TaskFlow is a web-based Project and Task Management System designed to help teams 
@@ -15,7 +15,7 @@ The project focuses on applying Full Stack .NET development concepts, database d
 object-oriented programming, and software architecture principles in a practical real-world application.
 
 
-===================================================================================
+=========================================================================
 
 
 TEAM MEMBERS :
@@ -33,7 +33,7 @@ TEAM MEMBERS :
 6- Menna
 
 
-===================================================================================
+=========================================================================
 
 
 WORKING PLAN :
@@ -55,7 +55,7 @@ Phase 6        	 Reporting & Analytics	Dashboard, Charts & Gantt View
 Phase 7          Testing, Integration & Deployment	Final Application & Documentation
 
 
-===================================================================================
+=========================================================================
 
 
 ROLES & RESPONSIBILITIES 
@@ -74,4 +74,4 @@ Mahmoud --------------------------- JavaScript, interactive UI and dashboard
 Menna ----------------------------- GitHub management, documentation and deployment
 
 
-===================================================================================
+=========================================================================
