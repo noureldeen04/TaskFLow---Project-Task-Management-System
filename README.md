@@ -28,9 +28,9 @@ TEAM MEMBERS :
 
 4- Shahd hany mohamed
 
-5- Mahmoud
+5- Mahmoud Mohamed abd elfatah
 
-6- Menna
+6- Mennallah Mohamed
 
 
 =========================================================================
@@ -69,9 +69,9 @@ Julie Wissam William -------------- Backend development, controllers and busines
 
 Shahd hany mohamed ---------------- Frontend development, HTML, CSS and Bootstrap
 
-Mahmoud --------------------------- JavaScript, interactive UI and dashboard
+Mahmoud Mohamed abd elfatah ------- JavaScript, interactive UI and dashboard
 
-Menna ----------------------------- GitHub management, documentation and deployment
+Mennallah Mohamed ------ ---------- GitHub management, documentation and deployment
 
 
 =========================================================================
