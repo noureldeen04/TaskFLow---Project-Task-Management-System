@@ -1,4 +1,7 @@
-﻿namespace TaskFlow_Project_Managment_System.Models.Entities
+﻿using PriorityEnum = TaskFlow_Project_Managment_System.Models.Enums.TaskPriority.Taskpriority;
+using StatusEnum = TaskFlow_Project_Managment_System.Models.Enums.TaskStatus.Taskstatus;
+
+namespace TaskFlow_Project_Managment_System.Models.Entities
 {
     public class AllTask
     {
@@ -19,7 +22,10 @@
 
        
 
-        //Priority and status in enums
+        // ---- Added by Menna for the Boards & Tasks module ----
+        public StatusEnum Status { get; set; } = StatusEnum.ToDo;
+        public PriorityEnum Priority { get; set; } = PriorityEnum.Medium;
+        public bool Archived { get; set; }
 
         public DateTime? DueDate { get; set; } // Optional: not every task has a deadline.
 
