@@ -1,0 +1,73 @@
+@{
+    Layout = null;
+    ViewData["Title"] = "Boards & Tasks";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaskFlow | Boards & Tasks</title>
+  <link rel="stylesheet" href="~/css/taskflow-board.css" asp-append-version="true" />
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand"><span class="brand-mark">T</span> TaskFlow</div>
+    <div class="workspace-label">WORKSPACE</div>
+    <button class="nav-item active">▦ <span>Boards</span></button>
+    <button class="nav-item" id="archiveNav">▣ <span>Archived tasks</span></button>
+    <div class="sidebar-bottom"><div class="profile-avatar">M</div><div><b>Menna</b><small>Workspace member</small></div></div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="breadcrumb">Workspace <span>/</span> My project <span>/</span> <b>Board</b></div>
+      <div class="top-actions"><span class="online-dot"></span><span>Team workspace</span><div class="top-avatar">M</div></div>
+    </header>
+
+    <section class="content">
+      <div class="heading-row">
+        <div><p class="eyebrow">PROJECT MANAGEMENT</p><h1 id="pageTitle">Boards & Tasks</h1><p class="subtitle">Plan, organize, and track your team's work.</p></div>
+        <button class="primary-btn" id="createBtn">＋ Create task</button>
+      </div>
+
+      <div id="boardView">
+        <div class="board-toolbar">
+          <div class="view-label"><span class="view-icon">▦</span> Kanban board <span class="chevron">⌄</span></div>
+          <div class="toolbar-right"><span class="member-stack"><i>M</i><i>A</i><i>Y</i></span><span class="members-text">3 members</span><button class="filter-btn" id="filterBtn">☷ Filter</button></div>
+        </div>
+        <div class="filter-panel hidden" id="filterPanel">
+          <select id="priorityFilter"><option value="">All priorities</option><option>Low</option><option>Medium</option><option>High</option><option>Critical</option></select>
+          <select id="assigneeFilter"><option value="">All assignees</option><option>Menna</option><option>Ahmed</option><option>Youssef</option><option>Unassigned</option></select>
+          <button class="clear-filter" id="clearFilter">Clear filters</button>
+        </div>
+        <div class="board" id="board"></div>
+      </div>
+
+      <div id="archiveView" class="hidden">
+        <div class="archive-heading"><h2>Archived tasks</h2><p>Tasks you archived will appear here.</p></div>
+        <div id="archiveList" class="archive-grid"></div>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal-backdrop hidden" id="modalBackdrop">
+    <form class="task-modal" id="taskForm">
+      <div class="modal-head"><div><p class="eyebrow">TASK DETAILS</p><h2 id="modalTitle">Create task</h2></div><button type="button" class="close-btn" id="closeModal">×</button></div>
+      <input type="hidden" id="taskId">
+      <label>Task title <span>*</span><input id="title" maxlength="120" placeholder="e.g. Design landing page" required></label>
+      <label>Description<textarea id="description" rows="3" placeholder="Add more details about this task..."></textarea></label>
+      <div class="form-row">
+        <label>Status<select id="status"><option value="todo">To Do</option><option value="progress">In Progress</option><option value="review">Review</option><option value="done">Done</option></select></label>
+        <label>Priority<select id="priority"><option>Low</option><option selected>Medium</option><option>High</option><option>Critical</option></select></label>
+      </div>
+      <div class="form-row">
+        <label>Assignee<select id="assignee"><option value="">Unassigned</option><option>Menna</option><option>Ahmed</option><option>Youssef</option></select></label>
+        <label>Due date<input type="date" id="dueDate"></label>
+      </div>
+      <div class="modal-actions"><button type="button" class="secondary-btn" id="cancelBtn">Cancel</button><button type="submit" class="primary-btn">Save task</button></div>
+    </form>
+  </div>
+  <script src="~/js/taskflow-board.js" asp-append-version="true"></script>
+</body>
+</html>

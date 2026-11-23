@@ -19,9 +19,16 @@ namespace TaskFlow_Project_Managment_System.Context
 
         // Nour-Zoubaa Connection string
         // "Data Source=ZOUBAA\\SQLEXPRESS;Initial Catalog=TaskFlowFP;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30"
+        public WorkFlowContext(DbContextOptions<WorkFlowContext> options) : base(options)
+        {
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer();
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer();
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
