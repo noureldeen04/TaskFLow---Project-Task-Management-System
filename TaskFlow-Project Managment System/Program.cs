@@ -18,6 +18,8 @@ namespace TaskFlow_Project_Managment_System
             }
             app.UseRouting();
 
+            app.UseStaticFiles();
+
             app.UseAuthorization();
 
             app.MapStaticAssets();
