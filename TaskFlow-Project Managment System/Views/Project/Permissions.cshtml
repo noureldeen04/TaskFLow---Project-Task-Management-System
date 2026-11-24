@@ -1,0 +1,88 @@
+@model ProjectPermissionsViewModel
+@{
+    ViewData["Title"] = "View/Edit Permissions";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/project.css" asp-append-version="true" />
+}
+
+<div class="project-page">
+    <div class="project-page-header">
+        <div>
+            <p class="project-eyebrow">@Model.ProjectName</p>
+            <h1 class="tf-page-heading">View/Edit Permissions</h1>
+            <p class="tf-page-subtitle">Configure who is included in this project's view and edit scopes.</p>
+        </div>
+        <a asp-controller="Project" asp-action="Settings" asp-route-id="@Model.ProjectId" class="btn tf-btn-outline">
+            <i class="bi bi-arrow-left" aria-hidden="true"></i> Project settings
+        </a>
+    </div>
+
+    @if (TempData["ProjectPermissionsSuccess"] is string successMessage)
+    {
+        <div class="alert alert-success project-alert-success" role="status">@successMessage</div>
+    }
+
+    @if (Model.IsEditing)
+    {
+        <form asp-controller="Project" asp-action="Permissions" asp-route-id="@Model.ProjectId" method="post" class="project-form">
+            <input asp-for="ProjectId" type="hidden" />
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+            <section class="tf-card project-form-card" aria-labelledby="permission-editor-heading">
+                <div class="tf-card-header">
+                    <h2 class="project-section-heading" id="permission-editor-heading">Edit permission configuration</h2>
+                    <p class="project-section-description">Choose the existing project audience scopes that apply to viewing and editing.</p>
+                </div>
+                <div class="tf-card-body project-fields">
+                    <div>
+                        <label asp-for="ViewAccess" class="form-label project-label"></label>
+                        <select asp-for="ViewAccess" asp-items="Html.GetEnumSelectList<ProjectAccessLevel>()" class="form-select tf-form-control"></select>
+                        <span asp-validation-for="ViewAccess" class="text-danger project-validation"></span>
+                        <small class="tf-muted">Who the configuration designates as able to view this project.</small>
+                    </div>
+                    <div>
+                        <label asp-for="EditAccess" class="form-label project-label"></label>
+                        <select asp-for="EditAccess" asp-items="Html.GetEnumSelectList<ProjectAccessLevel>()" class="form-select tf-form-control"></select>
+                        <span asp-validation-for="EditAccess" class="text-danger project-validation"></span>
+                        <small class="tf-muted">Who the configuration designates as able to edit this project.</small>
+                    </div>
+                </div>
+            </section>
+            <div class="project-form-actions">
+                <a asp-controller="Project" asp-action="Permissions" asp-route-id="@Model.ProjectId" class="btn tf-btn-outline">Cancel</a>
+                <button type="submit" class="btn tf-btn-primary"><i class="bi bi-check2" aria-hidden="true"></i> Save permissions</button>
+            </div>
+        </form>
+    }
+    else
+    {
+        <section class="tf-card project-form-card" aria-labelledby="permission-summary-heading">
+            <div class="tf-card-header project-settings-heading-row">
+                <div>
+                    <h2 class="project-section-heading" id="permission-summary-heading">Current configuration</h2>
+                    <p class="project-section-description">@(Model.IsPersisted ? "Saved project-level settings." : "Default settings; save changes to persist this configuration.")</p>
+                </div>
+                <a asp-controller="Project" asp-action="Permissions" asp-route-id="@Model.ProjectId" asp-route-edit="true" class="btn tf-btn-outline">
+                    <i class="bi bi-pencil" aria-hidden="true"></i> Edit permissions
+                </a>
+            </div>
+            <div class="tf-card-body">
+                <dl class="project-detail-list">
+                    <div><dt>View access</dt><dd>@Model.ViewAccess</dd></div>
+                    <div><dt>Edit access</dt><dd>@Model.EditAccess</dd></div>
+                </dl>
+            </div>
+        </section>
+    }
+
+    <p class="project-permission-note"><i class="bi bi-info-circle" aria-hidden="true"></i> These values are configuration only. TaskFlow does not currently enforce them as access restrictions.</p>
+</div>
+
+@section Scripts {
+    @if (Model.IsEditing)
+    {
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

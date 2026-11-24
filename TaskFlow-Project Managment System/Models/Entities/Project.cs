@@ -1,5 +1,7 @@
 ﻿using TaskFlow_Project_Managment_System.Models.Entities;
 
+using TaskFlow_Project_Managment_System.Models.Enums;
+
 namespace TaskFlow_Project_Managment_System.Models
 {
     public class Project
@@ -7,6 +9,7 @@ namespace TaskFlow_Project_Managment_System.Models
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
+        public ProjectTemplate Template { get; set; } = ProjectTemplate.Basic;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
 
@@ -20,6 +23,8 @@ namespace TaskFlow_Project_Managment_System.Models
         public User Users { get; set; } = null!;// user navigation
 
         public ICollection<AllTask> ProjectTasks { get; set; } = new List<AllTask>();
+
+        public ProjectPermissionSettings? PermissionSettings { get; set; }
 
     }
 }

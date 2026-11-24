@@ -1,0 +1,51 @@
+@model IReadOnlyList<ProjectListItemViewModel>
+@{
+    ViewData["Title"] = "Projects";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/project.css" asp-append-version="true" />
+}
+
+<div class="project-page">
+    <div class="project-page-header">
+        <div>
+            <p class="project-eyebrow">Workspace</p>
+            <h1 class="tf-page-heading">Projects</h1>
+            <p class="tf-page-subtitle">Plan work and keep your team moving forward.</p>
+        </div>
+        <a asp-controller="Project" asp-action="Create" class="btn tf-btn-primary">
+            <i class="bi bi-plus-lg" aria-hidden="true"></i> Add project
+        </a>
+    </div>
+
+    @if (ViewData["LoadError"] is string loadError)
+    {
+        <div class="alert alert-danger" role="alert">@loadError</div>
+    }
+    else if (Model.Count == 0)
+    {
+        <section class="tf-card tf-empty-state project-empty-state">
+            <i class="bi bi-kanban" aria-hidden="true"></i>
+            <h2>No projects yet</h2>
+            <p>Create your first project to start organizing work.</p>
+            <a asp-controller="Project" asp-action="Create" class="btn tf-btn-primary">Create a project</a>
+        </section>
+    }
+    else
+    {
+        <div class="project-list-grid">
+            @foreach (var project in Model)
+            {
+                <a asp-controller="Project" asp-action="Details" asp-route-id="@project.Id" class="tf-card project-list-card">
+                    <span class="project-list-icon"><i class="bi bi-kanban" aria-hidden="true"></i></span>
+                    <span class="project-list-copy">
+                        <strong>@project.Name</strong>
+                        <span>@(string.IsNullOrWhiteSpace(project.Description) ? "No description" : project.Description)</span>
+                    </span>
+                    <span class="tf-badge tf-badge-primary">@project.Template</span>
+                </a>
+            }
+        </div>
+    }
+</div>

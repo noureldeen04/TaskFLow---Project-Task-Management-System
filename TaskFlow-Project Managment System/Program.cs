@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using TaskFlow_Project_Managment_System.Context;
+
 namespace TaskFlow_Project_Managment_System
 {
     public class Program
@@ -8,6 +11,7 @@ namespace TaskFlow_Project_Managment_System
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddDbContext<WorkFlowContext>();
 
             var app = builder.Build();
 
@@ -17,6 +21,8 @@ namespace TaskFlow_Project_Managment_System
                 app.UseExceptionHandler("/Home/Error");
             }
             app.UseRouting();
+
+            app.UseStaticFiles();
 
             app.UseAuthorization();
 

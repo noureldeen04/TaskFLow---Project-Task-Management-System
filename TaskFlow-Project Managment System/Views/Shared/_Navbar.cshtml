@@ -1,0 +1,50 @@
+@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? "Home";
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString() ?? "Index";
+    var displayTitle = ViewData["Title"] as string ?? currentController;
+    var inProjectSection = string.Equals(currentController, "Project", StringComparison.OrdinalIgnoreCase);
+    var projectId = ViewData["ProjectId"] is int selectedProjectId ? selectedProjectId : (int?)null;
+}
+<header class="tf-topbar">
+    <div class="tf-topbar-left">
+        <button class="tf-icon-button tf-mobile-menu-button" id="tf-sidebar-open" type="button"
+                aria-label="Open navigation" aria-expanded="false" aria-controls="tf-sidebar">
+            <i class="bi bi-list" aria-hidden="true"></i>
+        </button>
+        <div class="tf-breadcrumb">
+            <span class="tf-breadcrumb-muted">TaskFlow Workspace</span>
+            @if (inProjectSection)
+            {
+                if (projectId.HasValue)
+                {
+                    <a asp-controller="Project" asp-action="Details" asp-route-id="@projectId.Value" class="tf-navbar-project-link">
+                        <i class="bi bi-kanban" aria-hidden="true"></i><span>Project</span>
+                    </a>
+                }
+                else
+                {
+                    <a asp-controller="Project" asp-action="Index" class="tf-navbar-project-link">
+                        <i class="bi bi-kanban" aria-hidden="true"></i><span>Project</span>
+                    </a>
+                }
+                <i class="bi bi-chevron-right" aria-hidden="true"></i>
+            }
+            <span class="tf-breadcrumb-current">@displayTitle</span>
+        </div>
+    </div>
+
+    <div class="tf-topbar-actions">
+        <button class="tf-icon-button" id="tf-theme-toggle" type="button"
+                aria-label="Switch to dark mode" title="Toggle theme">
+            <i class="bi bi-moon-stars" id="tf-theme-icon" aria-hidden="true"></i>
+        </button>
+        <button class="tf-icon-button" type="button" aria-label="Notifications" title="Notifications">
+            <i class="bi bi-bell" aria-hidden="true"></i>
+            <span class="tf-notification-dot" aria-hidden="true"></span>
+        </button>
+        <div class="tf-user-menu" aria-label="Signed-in user">
+            <span class="tf-user-avatar">U</span>
+            <span class="tf-user-name">User</span>
+        </div>
+    </div>
+</header>

@@ -1,0 +1,70 @@
+:root {
+    color-scheme: light;
+    --tf-font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+    --tf-primary: #505AC9;
+    --tf-primary-hover: #424CB4;
+    --tf-primary-soft: #EEF0FF;
+    --tf-primary-contrast: #FFFFFF;
+
+    --tf-page: #F8F9FA;
+    --tf-surface: #FFFFFF;
+    --tf-surface-subtle: #F1F3F5;
+    --tf-surface-hover: #F1F2F5;
+    --tf-text: #171923;
+    --tf-text-muted: #687080;
+    --tf-border: #E4E7EC;
+    --tf-sidebar: #FFFFFF;
+    --tf-sidebar-active: #EEF0FF;
+
+    --tf-success: #198754;
+    --tf-warning: #B7791F;
+    --tf-danger: #DC3545;
+    --tf-info: #0D6EFD;
+
+    --tf-radius-sm: 6px;
+    --tf-radius-md: 10px;
+    --tf-radius-lg: 14px;
+    --tf-radius-xl: 16px;
+
+    --tf-space-1: 4px;
+    --tf-space-2: 8px;
+    --tf-space-3: 12px;
+    --tf-space-4: 16px;
+    --tf-space-5: 20px;
+    --tf-space-6: 24px;
+    --tf-space-8: 32px;
+
+    --tf-sidebar-width: 256px;
+    --tf-sidebar-collapsed-width: 76px;
+    --tf-topbar-height: 64px;
+
+    --tf-shadow-sm: 0 1px 2px rgb(16 24 40 / 5%);
+    --tf-shadow-md: 0 8px 24px rgb(16 24 40 / 8%);
+}
+
+:root[data-theme="dark"] {
+    color-scheme: dark;
+    --tf-primary: #7C84E8;
+    --tf-primary-hover: #9299F0;
+    --tf-primary-soft: #292C4B;
+    --tf-primary-contrast: #FFFFFF;
+
+    --tf-page: #121212;
+    --tf-surface: #1C1C1F;
+    --tf-surface-subtle: #242429;
+    --tf-surface-hover: #2A2A30;
+    --tf-text: #F2F3F5;
+    --tf-text-muted: #A3A7B0;
+    --tf-border: #34343B;
+    --tf-sidebar: #18181B;
+    --tf-sidebar-active: #292C4B;
+
+    --tf-success: #55B889;
+    --tf-warning: #E4B35B;
+    --tf-danger: #F07883;
+    --tf-info: #73A7FF;
+
+    --tf-shadow-sm: 0 1px 2px rgb(0 0 0 / 18%);
+    --tf-shadow-md: 0 8px 24px rgb(0 0 0 / 24%);
+}
