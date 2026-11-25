@@ -7,6 +7,7 @@ using System.Security.Claims;
 using TaskFlow_Project_Managment_System.Context;
 using TaskFlow_Project_Managment_System.Models;
 using TaskFlow_Project_Managment_System.Models.Entities;
+using TaskFlow_Project_Managment_System.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -48,8 +49,7 @@ namespace TaskFlow_Project_Managment_System.Controllers
 
             _db.Users.Add(user);
             await _db.SaveChangesAsync();
-
-            // TODO: CreatePersonalWorkspaceAsync(user.Id) — هيتعمل مع شغل Shahd
+            await EnsureWorkspaceMembershipAsync(user);
 
             await SignInAsync(user);
             return RedirectToAction("Index", "Home");
@@ -83,6 +83,7 @@ namespace TaskFlow_Project_Managment_System.Controllers
                 return View(model);
             }
 
+            await EnsureWorkspaceMembershipAsync(user);
             await SignInAsync(user);
             return RedirectToAction("Index", "Home");
         }
@@ -105,6 +106,53 @@ public async Task<IActionResult> Logout()
 
             var identity = new ClaimsIdentity(claims, "TaskFlowCookie");
             await HttpContext.SignInAsync("TaskFlowCookie", new ClaimsPrincipal(identity));
+        }
+
+        private async Task EnsureWorkspaceMembershipAsync(User user)
+        {
+            if (!user.WorkspaceId.HasValue)
+            {
+                await using var transaction = await _db.Database.BeginTransactionAsync();
+
+                var workspaceName = $"{user.FullName}'s Workspace";
+                if (workspaceName.Length > 100)
+                    workspaceName = workspaceName[..100];
+
+                var workspace = new WorkSpace
+                {
+                    Name = workspaceName,
+                    OwnerId = user.Id,
+                    CreatedAt = DateTime.UtcNow
+                };
+                _db.WorkSpaces.Add(workspace);
+                await _db.SaveChangesAsync();
+
+                user.WorkspaceId = workspace.Id;
+                _db.WorkspaceMembers.Add(new WorkspaceMember
+                {
+                    WorkspaceId = workspace.Id,
+                    UserId = user.Id,
+                    Role = WorkspaceRole.Owner
+                });
+                await _db.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return;
+            }
+
+            var hasMembership = await _db.WorkspaceMembers.AnyAsync(member =>
+                member.WorkspaceId == user.WorkspaceId.Value && member.UserId == user.Id);
+            if (hasMembership) return;
+
+            var isOwner = await _db.WorkSpaces.AnyAsync(workspace =>
+                workspace.Id == user.WorkspaceId.Value && workspace.OwnerId == user.Id);
+
+            _db.WorkspaceMembers.Add(new WorkspaceMember
+            {
+                WorkspaceId = user.WorkspaceId.Value,
+                UserId = user.Id,
+                Role = isOwner ? WorkspaceRole.Owner : WorkspaceRole.Member
+            });
+            await _db.SaveChangesAsync();
         }
     }
 }
