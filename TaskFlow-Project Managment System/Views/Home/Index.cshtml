@@ -1,1 +1,83 @@
-﻿
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<section class="tf-dashboard" aria-labelledby="dashboard-title">
+    <header class="tf-dashboard-heading">
+        <div>
+            <h1 class="tf-page-heading" id="dashboard-title">Dashboard</h1>
+            <p class="tf-page-subtitle">A clear view of project progress and team activity.</p>
+        </div>
+        <span class="tf-badge tf-badge-primary"><i class="bi bi-info-circle" aria-hidden="true"></i> Preview layout</span>
+    </header>
+
+    <div class="tf-notice" role="note">
+        <i class="bi bi-info-circle" aria-hidden="true"></i>
+        <div><strong>Analytics need project data.</strong> This layout uses no sample values. Statistics and charts will populate after task status, priority, and assignment data are connected.</div>
+    </div>
+
+    <div class="tf-stat-grid" aria-label="TaskFlow summary">
+        <article class="tf-card tf-stat-card"><span class="tf-stat-label">Total projects</span><strong class="tf-stat-value">—</strong><span class="tf-muted">Awaiting project data</span></article>
+        <article class="tf-card tf-stat-card"><span class="tf-stat-label">Total tasks</span><strong class="tf-stat-value">—</strong><span class="tf-muted">Awaiting task data</span></article>
+        <article class="tf-card tf-stat-card"><span class="tf-stat-label">Completed tasks</span><strong class="tf-stat-value">—</strong><span class="tf-muted">Task status is not stored</span></article>
+        <article class="tf-card tf-stat-card"><span class="tf-stat-label">In progress</span><strong class="tf-stat-value">—</strong><span class="tf-muted">Task status is not stored</span></article>
+        <article class="tf-card tf-stat-card"><span class="tf-stat-label">Overdue tasks</span><strong class="tf-stat-value">—</strong><span class="tf-muted">Completion state is needed</span></article>
+        <article class="tf-card tf-stat-card"><span class="tf-stat-label">Team members</span><strong class="tf-stat-value">—</strong><span class="tf-muted">Awaiting team data</span></article>
+    </div>
+
+    <div class="tf-dashboard-grid">
+        <article class="tf-card tf-analytics-card">
+            <div class="tf-card-header"><h2>Tasks by status</h2><p>Distribution across task workflow states</p></div>
+            <div class="tf-card-body tf-chart-body">
+                <canvas id="task-status-chart" role="img" aria-label="Task distribution by status; no status data is connected"></canvas>
+                <div class="tf-chart-empty"><i class="bi bi-pie-chart" aria-hidden="true"></i><span>Task status data is not available yet.</span></div>
+            </div>
+        </article>
+
+        <article class="tf-card tf-analytics-card">
+            <div class="tf-card-header"><h2>Team workload</h2><p>Assigned, completed, and active tasks by member</p></div>
+            <div class="tf-card-body tf-chart-body">
+                <canvas id="team-workload-chart" role="img" aria-label="Team workload; no assignment or status data is connected"></canvas>
+                <div class="tf-chart-empty"><i class="bi bi-bar-chart" aria-hidden="true"></i><span>Workload will appear when task assignments and statuses are available.</span></div>
+            </div>
+        </article>
+    </div>
+
+    <article class="tf-card tf-projects-card">
+        <div class="tf-card-header"><h2>Project progress</h2><p>Completion based on each project’s completed tasks</p></div>
+        <div class="tf-card-body">
+            <div class="tf-empty-state"><i class="bi bi-kanban" aria-hidden="true"></i><strong>No progress to display</strong><span>Project completion requires persisted task statuses.</span></div>
+        </div>
+    </article>
+
+    <div class="tf-dashboard-grid">
+        <article class="tf-card tf-analytics-card">
+            <div class="tf-card-header"><h2>Overdue tasks</h2><p>Past due and not yet completed</p></div>
+            <div class="tf-card-body">
+                <div class="tf-empty-state"><i class="bi bi-check2-circle" aria-hidden="true"></i><strong>No task records connected</strong><span>Overdue highlighting depends on due dates and completion status.</span></div>
+            </div>
+        </article>
+        <article class="tf-card tf-analytics-card">
+            <div class="tf-card-header"><h2>Sprint velocity</h2><p>Completed work across sprints</p></div>
+            <div class="tf-card-body">
+                <div class="tf-empty-state"><i class="bi bi-graph-up" aria-hidden="true"></i><strong>Sprint data is not available</strong><span>This project has no sprint model, so no velocity values are shown.</span></div>
+            </div>
+        </article>
+    </div>
+
+    <article class="tf-card tf-projects-card">
+        <div class="tf-card-header"><h2>Burndown and burnup</h2><p>Progress over the duration of a sprint</p></div>
+        <div class="tf-card-body">
+            <div class="tf-limitation"><i class="bi bi-hourglass-split" aria-hidden="true"></i><span>These charts need sprint dates, task estimates, and historical progress records. The current project does not store those records, so a trend line cannot be calculated reliably.</span></div>
+        </div>
+    </article>
+</section>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" />
+}
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    <script src="~/js/dashboard.js" asp-append-version="true"></script>
+}
