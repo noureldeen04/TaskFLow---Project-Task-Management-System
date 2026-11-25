@@ -5,6 +5,8 @@ namespace TaskFlow_Project_Managment_System.Services
     public enum WorkspacePermission
     {
         ViewContent,
+        ViewDashboard,
+        ViewActivityLogs,
         CreateTask,
         EditTask,
         Comment,

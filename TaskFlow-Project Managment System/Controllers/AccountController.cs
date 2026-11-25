@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
@@ -56,6 +57,10 @@ namespace TaskFlow_Project_Managment_System.Controllers
 
         [HttpGet]
         public IActionResult Login() => View();
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult AccessDenied() => View();
 
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
