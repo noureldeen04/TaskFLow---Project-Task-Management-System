@@ -1,0 +1,50 @@
+﻿@model TaskFlow_Project_Managment_System.Models.ViewModels.EditWorkspaceViewModel
+
+@{
+    ViewData["Title"] = "Edit Workspace";
+}
+
+<section class="workspace-page">
+    <div class="workspace-form-card">
+        <h1>Edit Workspace</h1>
+        <p class="workspace-form-card__description">
+            Update the workspace name or description.
+        </p>
+
+        <form asp-action="Edit" method="post">
+            @Html.AntiForgeryToken()
+
+            <input type="hidden" asp-for="Id" />
+
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label">Workspace name</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label">Description</label>
+                <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="workspace-form-card__actions">
+                <a asp-action="Details"
+                   asp-route-id="@Model.Id"
+                   class="btn btn-outline-secondary">
+                    Cancel
+                </a>
+
+                <button type="submit" class="btn btn-primary">
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -13,5 +13,8 @@
 
         public ICollection<User> Members { get; set; } = new List<User>();      // "contains" users
         public ICollection<Project> Projects { get; set; } = new List<Project>(); // "contains" projects
+        public ICollection<Team> Teams { get; set; } = new List<Team>();       // "contains" teams
+        public ICollection<ActivityLog> ActivityLogs { get; set; } = new List<ActivityLog>();   // "contains" ActivityLog
+        public ICollection<WorkspaceInvitation> Invitations { get; set; } = new List<WorkspaceInvitation>();   // "contains" WorkspaceInvitation
     }
-}
+ }

@@ -1,91 +1,165 @@
 @{
-    var currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
-    var currentAction = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
-    var hasProjectContext = string.Equals(currentController, "Project", StringComparison.OrdinalIgnoreCase)
-        && ViewData["ProjectId"] is int;
-    var projectId = hasProjectContext ? (int)ViewData["ProjectId"]! : 0;
+    var currentController =
+        ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+
+    var currentAction =
+        ViewContext.RouteData.Values["action"]?.ToString() ?? "";
+
+    int? selectedWorkspaceId = null;
+
+    var routeValues = ViewContext.RouteData.Values;
+
+    if (routeValues.TryGetValue("workspaceId", out var workspaceIdValue) &&
+        int.TryParse(workspaceIdValue?.ToString(), out var routeWorkspaceId))
+    {
+        selectedWorkspaceId = routeWorkspaceId;
+    }
+    else if (string.Equals(
+                 currentController,
+                 "WorkSpace",
+                 StringComparison.OrdinalIgnoreCase) &&
+             !string.Equals(
+                 currentAction,
+                 "Index",
+                 StringComparison.OrdinalIgnoreCase) &&
+             routeValues.TryGetValue("id", out var idValue) &&
+             int.TryParse(idValue?.ToString(), out var routeId))
+    {
+        selectedWorkspaceId = routeId;
+    }
+    else if (Context.Request.Cookies.TryGetValue(
+                 "SelectedWorkspaceId",
+                 out var savedWorkspaceId) &&
+             int.TryParse(savedWorkspaceId, out var cookieWorkspaceId))
+    {
+        selectedWorkspaceId = cookieWorkspaceId;
+    }
+
     bool IsActive(string controller, string? action = null) =>
-        string.Equals(currentController, controller, StringComparison.OrdinalIgnoreCase) &&
-        (action is null || string.Equals(currentAction, action, StringComparison.OrdinalIgnoreCase));
+        string.Equals(
+            currentController,
+            controller,
+            StringComparison.OrdinalIgnoreCase) &&
+        (action is null ||
+         string.Equals(
+             currentAction,
+             action,
+             StringComparison.OrdinalIgnoreCase));
 }
+
 <aside class="tf-sidebar" id="tf-sidebar" aria-label="Main navigation">
     <div class="tf-sidebar-brand">
-        <a asp-controller="Home" asp-action="Index" class="tf-brand-link" aria-label="TaskFlow home">
-            <span class="tf-brand-mark"><i class="bi bi-kanban-fill" aria-hidden="true"></i></span>
+        <a asp-controller="Home"
+           asp-action="Index"
+           asp-route-workspaceId="@selectedWorkspaceId"
+           class="tf-brand-link"
+           aria-label="TaskFlow home">
+            <span class="tf-brand-mark">
+                <i class="bi bi-kanban-fill" aria-hidden="true"></i>
+            </span>
             <span class="tf-brand-name">TaskFlow</span>
         </a>
-        <button class="tf-icon-button tf-sidebar-mobile-close" id="tf-sidebar-close" type="button"
-                aria-label="Close navigation" aria-controls="tf-sidebar">
+
+        <button class="tf-icon-button tf-sidebar-mobile-close"
+                id="tf-sidebar-close"
+                type="button"
+                aria-label="Close navigation"
+                aria-controls="tf-sidebar">
             <i class="bi bi-x-lg" aria-hidden="true"></i>
         </button>
     </div>
 
     <nav class="tf-sidebar-nav">
         <div class="tf-nav-group">
-            <div class="tf-nav-label">Workspace</div>
-            <a asp-controller="Home" asp-action="Index"
+            @await Component.InvokeAsync("WorkspaceSwitcher")
+
+            <a asp-controller="Home"
+               asp-action="Index"
+               asp-route-workspaceId="@selectedWorkspaceId"
                class="tf-nav-link @(IsActive("Home", "Index") ? "active" : "")"
                aria-current="@(IsActive("Home", "Index") ? "page" : null)"
                title="Overview">
-                <i class="bi bi-grid-1x2" aria-hidden="true"></i><span>Overview</span>
+                <i class="bi bi-grid-1x2" aria-hidden="true"></i>
+                <span>Overview</span>
             </a>
-            <a asp-controller="Project" asp-action="Index"
-               class="tf-nav-link @(IsActive("Project", "Index") || IsActive("Project", "Details") || IsActive("Project", "Settings") || IsActive("Project", "Permissions") ? "active" : "")"
-               aria-current="@(IsActive("Project", "Index") || IsActive("Project", "Details") || IsActive("Project", "Settings") || IsActive("Project", "Permissions") ? "page" : null)" title="Projects">
-                <i class="bi bi-kanban" aria-hidden="true"></i><span>Projects</span>
+
+            <a asp-controller="WorkSpace"
+               asp-action="Index"
+               class="tf-nav-link @(IsActive("WorkSpace", "Index") ? "active" : "")"
+               aria-current="@(IsActive("WorkSpace", "Index") ? "page" : null)"
+               title="All Workspaces">
+                <i class="bi bi-briefcase" aria-hidden="true"></i>
+                <span>All Workspaces</span>
             </a>
-            @if (hasProjectContext)
-            {
-                <a asp-controller="Project" asp-action="Settings" asp-route-id="@projectId"
-                   class="tf-nav-link tf-nav-link-contextual @(IsActive("Project", "Settings") || IsActive("Project", "Permissions") ? "active" : "")"
-                   aria-current="@(IsActive("Project", "Settings") || IsActive("Project", "Permissions") ? "page" : null)"
-                   title="Project Settings">
-                    <i class="bi bi-sliders" aria-hidden="true"></i><span>Project Settings</span>
-                </a>
-            }
-            <a asp-controller="Tasks" asp-action="Index"
+
+            <a asp-controller="Project"
+               asp-action="Index"
+               asp-route-workspaceId="@selectedWorkspaceId"
+               class="tf-nav-link @(IsActive("Project") ? "active" : "")"
+               aria-current="@(IsActive("Project") ? "page" : null)"
+               title="Projects">
+                <i class="bi bi-kanban" aria-hidden="true"></i>
+                <span>Projects</span>
+            </a>
+
+            <a asp-controller="Tasks"
+               asp-action="Index"
+               asp-route-workspaceId="@selectedWorkspaceId"
                class="tf-nav-link @(IsActive("Tasks") ? "active" : "")"
-               aria-current="@(IsActive("Tasks") ? "page" : null)" title="My tasks">
-                <i class="bi bi-check2-square" aria-hidden="true"></i><span>My tasks</span>
+               aria-current="@(IsActive("Tasks") ? "page" : null)"
+               title="My tasks">
+                <i class="bi bi-check2-square" aria-hidden="true"></i>
+                <span>My tasks</span>
             </a>
-            <a asp-controller="Calendar" asp-action="Index"
+
+            <a asp-controller="Calendar"
+               asp-action="Index"
+               asp-route-workspaceId="@selectedWorkspaceId"
                class="tf-nav-link @(IsActive("Calendar") ? "active" : "")"
-               aria-current="@(IsActive("Calendar") ? "page" : null)" title="Calendar">
-                <i class="bi bi-calendar3" aria-hidden="true"></i><span>Calendar</span>
+               aria-current="@(IsActive("Calendar") ? "page" : null)"
+               title="Calendar">
+                <i class="bi bi-calendar3" aria-hidden="true"></i>
+                <span>Calendar</span>
             </a>
         </div>
 
         <div class="tf-nav-group">
             <div class="tf-nav-label">Insights</div>
-            <a asp-controller="Reports" asp-action="Index"
+
+            <a asp-controller="Reports"
+               asp-action="Index"
+               asp-route-workspaceId="@selectedWorkspaceId"
                class="tf-nav-link @(IsActive("Reports") ? "active" : "")"
-               aria-current="@(IsActive("Reports") ? "page" : null)" title="Reports">
-                <i class="bi bi-bar-chart" aria-hidden="true"></i><span>Reports</span>
+               aria-current="@(IsActive("Reports") ? "page" : null)"
+               title="Reports">
+                <i class="bi bi-bar-chart" aria-hidden="true"></i>
+                <span>Reports</span>
             </a>
         </div>
 
         <div class="tf-nav-group">
             <div class="tf-nav-label">Preferences</div>
-            <a asp-controller="Settings" asp-action="Index"
+
+            <a asp-controller="Settings"
+               asp-action="Index"
+               asp-route-workspaceId="@selectedWorkspaceId"
                class="tf-nav-link @(IsActive("Settings") ? "active" : "")"
-               aria-current="@(IsActive("Settings") ? "page" : null)" title="Settings">
-                <i class="bi bi-gear" aria-hidden="true"></i><span>Settings</span>
+               aria-current="@(IsActive("Settings") ? "page" : null)"
+               title="Settings">
+                <i class="bi bi-gear" aria-hidden="true"></i>
+                <span>Settings</span>
             </a>
         </div>
     </nav>
 
     <div class="tf-sidebar-bottom">
-        <button class="tf-nav-link tf-sidebar-collapse" id="tf-sidebar-collapse" type="button"
-                aria-expanded="true" aria-controls="tf-sidebar">
+        <button class="tf-nav-link tf-sidebar-collapse"
+                id="tf-sidebar-collapse"
+                type="button"
+                aria-expanded="true"
+                aria-controls="tf-sidebar">
             <i class="bi bi-layout-sidebar-inset" aria-hidden="true"></i>
             <span>Collapse sidebar</span>
         </button>
-        <div class="tf-workspace-card">
-            <div class="tf-workspace-avatar">TF</div>
-            <div class="tf-workspace-meta">
-                <strong>TaskFlow Workspace</strong>
-                <small>Team workspace</small>
-            </div>
-        </div>
     </div>
 </aside>

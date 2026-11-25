@@ -15,6 +15,7 @@ namespace TaskFlow_Project_Managment_System.Models
 
 
         public ICollection<WorkSpace> OwnedWorkspaces { get; set; } = new List<WorkSpace>();   // "owns"
+        public ICollection<Team> Teams { get; set; } = new List<Team>();
         public ICollection<Project> CreatedProjects { get; set; } = new List<Project>();       // "creates"
         public ICollection<AllTask> CreatedTasks { get; set; } = new List<AllTask>();        // "creates"
         public ICollection<AllTask> AssignedTasks { get; set; } = new List<AllTask>();       // "assigned_to"

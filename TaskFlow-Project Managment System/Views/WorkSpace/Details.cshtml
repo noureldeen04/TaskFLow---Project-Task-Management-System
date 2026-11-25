@@ -1,0 +1,579 @@
+﻿@model TaskFlow_Project_Managment_System.Models.WorkSpace
+
+@{
+    ViewData["Title"] = Model.Name;
+
+    var orderedActivities = Model.ActivityLogs
+        .OrderByDescending(activity => activity.CreatedAt)
+        .ToList();
+
+    var latestActivities = orderedActivities.Take(2).ToList();
+    var olderActivities = orderedActivities.Skip(2).ToList();
+}
+
+<section class="workspace-page">
+    <a asp-action="Index" class="btn tf-btn-outline">
+        Back to Workspaces
+    </a>
+
+    <header class="workspace-page__header">
+        <div>
+            <h1>@Model.Name</h1>
+
+            @if (!string.IsNullOrWhiteSpace(Model.Description))
+            {
+                <p>@Model.Description</p>
+            }
+
+            <small class="tf-muted">
+                Created @Model.CreatedAt.ToString("dd MMM yyyy")
+            </small>
+        </div>
+
+        <div class="workspace-header-actions">
+            <button type="button"
+                    class="btn tf-btn-outline"
+                    onclick="document.getElementById('editWorkspaceDialog').showModal()">
+                Edit Workspace
+            </button>
+
+            <button type="button"
+                    class="btn tf-btn-outline workspace-btn-delete"
+                    onclick="document.getElementById('deleteWorkspaceDialog').showModal()">
+                Delete Workspace
+            </button>
+        </div>
+
+        <dialog id="editWorkspaceDialog"
+                class="workspace-form-dialog"
+                aria-labelledby="editWorkspaceTitle">
+            <h2 id="editWorkspaceTitle">Edit Workspace</h2>
+
+            <form asp-controller="WorkSpace"
+                  asp-action="Edit"
+                  method="post">
+                @Html.AntiForgeryToken()
+
+                <input type="hidden" name="Id" value="@Model.Id" />
+
+                <div class="mb-3">
+                    <label for="workspaceName" class="form-label">Workspace name</label>
+                    <input id="workspaceName"
+                           name="Name"
+                           type="text"
+                           class="form-control tf-form-control"
+                           value="@Model.Name"
+                           maxlength="100"
+                           required />
+                </div>
+
+                <div class="mb-3">
+                    <label for="workspaceDescription" class="form-label">Description</label>
+                    <textarea id="workspaceDescription"
+                              name="Description"
+                              class="form-control tf-form-control"
+                              maxlength="500"
+                              rows="3">@Model.Description</textarea>
+                </div>
+
+                <div class="workspace-form-card__actions">
+                    <button type="button"
+                            class="btn tf-btn-outline"
+                            onclick="document.getElementById('editWorkspaceDialog').close()">
+                        Cancel
+                    </button>
+
+                    <button type="submit" class="btn tf-btn-primary">
+                        Save Changes
+                    </button>
+                </div>
+            </form>
+        </dialog>
+
+        <dialog id="deleteWorkspaceDialog"
+                class="workspace-delete-dialog"
+                aria-labelledby="deleteWorkspaceTitle">
+            <h2 id="deleteWorkspaceTitle">Delete Workspace?</h2>
+
+            <p>
+                Are you sure you want to delete <strong>@Model.Name</strong>?
+            </p>
+
+            <p class="text-danger">
+                Its Teams, Projects, and the Tasks connected to those Projects will also be deleted.
+            </p>
+
+            <div class="workspace-form-card__actions">
+                <button type="button"
+                        class="btn tf-btn-outline"
+                        onclick="document.getElementById('deleteWorkspaceDialog').close()">
+                    Cancel
+                </button>
+
+                <form asp-controller="WorkSpace"
+                      asp-action="DeleteConfirmed"
+                      method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@Model.Id" />
+
+                    <button type="submit"
+                            class="btn tf-btn-outline workspace-btn-delete">
+                        Yes, Delete
+                    </button>
+                </form>
+            </div>
+        </dialog>
+    </header>
+
+    <div class="workspace-details-grid">
+        <div class="workspace-teams">
+            <div class="workspace-teams__header">
+                <h2>My Teams</h2>
+
+                <button type="button"
+                        class="btn tf-btn-primary"
+                        onclick="document.getElementById('createTeamDialog').showModal()">
+                    Create Team
+                </button>
+            </div>
+
+            @if (TempData["TeamMemberError"] is string teamMemberError)
+            {
+                <div class="workspace-message workspace-message--error" role="alert">
+                    @teamMemberError
+                </div>
+            }
+
+            @if (TempData["TeamMemberSuccess"] is string teamMemberSuccess)
+            {
+                <div class="workspace-message workspace-message--success" role="status">
+                    @teamMemberSuccess
+                </div>
+            }
+
+            <dialog id="createTeamDialog"
+                    class="workspace-form-dialog"
+                    aria-labelledby="createTeamTitle">
+                <h2 id="createTeamTitle">Create Team</h2>
+
+                <form asp-controller="Teams"
+                      asp-action="Create"
+                      method="post">
+                    @Html.AntiForgeryToken()
+
+                    <input type="hidden" name="WorkspaceId" value="@Model.Id" />
+
+                    <div class="mb-3">
+                        <label for="newTeamName" class="form-label">Team name</label>
+                        <input id="newTeamName"
+                               name="Name"
+                               type="text"
+                               class="form-control tf-form-control"
+                               maxlength="100"
+                               required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="newTeamDescription" class="form-label">Description</label>
+                        <textarea id="newTeamDescription"
+                                  name="Description"
+                                  class="form-control tf-form-control"
+                                  maxlength="500"
+                                  rows="3"></textarea>
+                    </div>
+
+                    <div class="workspace-form-card__actions">
+                        <button type="button"
+                                class="btn tf-btn-outline"
+                                onclick="document.getElementById('createTeamDialog').close()">
+                            Cancel
+                        </button>
+
+                        <button type="submit" class="btn tf-btn-primary">
+                            Create Team
+                        </button>
+                    </div>
+                </form>
+            </dialog>
+
+            @if (Model.Teams.Count == 0)
+            {
+                <div class="workspace-empty-state">
+                    <p>No Teams in this Workspace yet.</p>
+                </div>
+            }
+            else
+            {
+                <div class="workspace-list">
+                    @foreach (var team in Model.Teams)
+                    {
+                        var availableMembers = Model.Members
+                            .Where(member => !team.Members.Any(teamMember => teamMember.Id == member.Id))
+                            .OrderBy(member => member.FullName)
+                            .ToList();
+
+                        <article class="workspace-card">
+                            <h3>@team.Name</h3>
+
+                            @if (!string.IsNullOrWhiteSpace(team.Description))
+                            {
+                                <p>@team.Description</p>
+                            }
+
+                            <div class="workspace-team-members">
+                                <h4>Team Members (@team.Members.Count)</h4>
+
+                                @if (team.Members.Count > 0)
+                                {
+                                    <div class="workspace-team-members__list">
+                                        @foreach (var member in team.Members.OrderBy(member => member.FullName))
+                                        {
+                                            <div class="workspace-team-member">
+                                                <span class="workspace-team-member__name">
+                                                    <i class="bi bi-person" aria-hidden="true"></i>
+                                                    @member.FullName
+                                                </span>
+
+                                                <form asp-controller="Teams"
+                                                      asp-action="RemoveMember"
+                                                      method="post"
+                                                      class="workspace-team-member__remove-form">
+                                                    @Html.AntiForgeryToken()
+
+                                                    <input type="hidden" name="teamId" value="@team.Id" />
+                                                    <input type="hidden" name="userId" value="@member.Id" />
+
+                                                    <button type="submit"
+                                                            class="btn tf-btn-outline workspace-btn-delete workspace-icon-button"
+                                                            aria-label="Remove @member.FullName from @team.Name"
+                                                            title="Remove member">
+                                                        <i class="bi bi-trash" aria-hidden="true"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                                else if (Model.Members.Count > 0)
+                                {
+                                    <p class="tf-muted">No members in this Team yet.</p>
+                                }
+
+                                @if (availableMembers.Count > 0)
+                                {
+                                    <form asp-controller="Teams"
+                                          asp-action="AddMember"
+                                          method="post"
+                                          class="workspace-team-add-member">
+                                        @Html.AntiForgeryToken()
+
+                                        <input type="hidden" name="WorkspaceId" value="@Model.Id" />
+                                        <input type="hidden" name="TeamId" value="@team.Id" />
+
+                                        <label for="teamMember-@team.Id" class="visually-hidden">
+                                            Select a Workspace member
+                                        </label>
+
+                                        <select id="teamMember-@team.Id"
+                                                name="UserId"
+                                                class="form-select tf-form-control"
+                                                required>
+                                            <option value="">Select a Workspace member</option>
+
+                                            @foreach (var member in availableMembers)
+                                            {
+                                                <option value="@member.Id">@member.FullName</option>
+                                            }
+                                        </select>
+
+                                        <button type="submit" class="btn tf-btn-primary">
+                                            Add Member
+                                        </button>
+                                    </form>
+                                }
+                                else if (Model.Members.Count == 0)
+                                {
+                                    <p class="tf-muted">
+                                        There are no Workspace members available to add.
+                                    </p>
+                                }
+                                else
+                                {
+                                    <p class="tf-muted">
+                                        All Workspace members are already in this Team.
+                                    </p>
+                                }
+                            </div>
+
+                            <div class="workspace-header-actions">
+                                <button type="button"
+                                        class="btn tf-btn-outline workspace-icon-button"
+                                        aria-label="Edit @team.Name"
+                                        title="Edit team"
+                                        onclick="document.getElementById('editTeamDialog-@team.Id').showModal()">
+                                    <i class="bi bi-pencil" aria-hidden="true"></i>
+                                </button>
+
+                                <button type="button"
+                                        class="btn tf-btn-outline workspace-btn-delete workspace-icon-button"
+                                        aria-label="Delete @team.Name"
+                                        title="Delete team"
+                                        onclick="document.getElementById('deleteTeamDialog-@team.Id').showModal()">
+                                    <i class="bi bi-trash" aria-hidden="true"></i>
+                                </button>
+                            </div>
+
+                            <dialog id="editTeamDialog-@team.Id"
+                                    class="workspace-form-dialog"
+                                    aria-labelledby="editTeamTitle-@team.Id">
+                                <h2 id="editTeamTitle-@team.Id">Edit Team</h2>
+
+                                <form asp-controller="Teams"
+                                      asp-action="Edit"
+                                      method="post">
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden" name="Id" value="@team.Id" />
+                                    <input type="hidden" name="WorkspaceId" value="@Model.Id" />
+
+                                    <div class="mb-3">
+                                        <label for="teamName-@team.Id" class="form-label">Team name</label>
+                                        <input id="teamName-@team.Id"
+                                               name="Name"
+                                               type="text"
+                                               class="form-control tf-form-control"
+                                               value="@team.Name"
+                                               maxlength="100"
+                                               required />
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="teamDescription-@team.Id" class="form-label">Description</label>
+                                        <textarea id="teamDescription-@team.Id"
+                                                  name="Description"
+                                                  class="form-control tf-form-control"
+                                                  maxlength="500"
+                                                  rows="3">@team.Description</textarea>
+                                    </div>
+
+                                    <div class="workspace-form-card__actions">
+                                        <button type="button"
+                                                class="btn tf-btn-outline"
+                                                onclick="document.getElementById('editTeamDialog-@team.Id').close()">
+                                            Cancel
+                                        </button>
+
+                                        <button type="submit" class="btn tf-btn-primary">
+                                            Save Changes
+                                        </button>
+                                    </div>
+                                </form>
+                            </dialog>
+
+                            <dialog id="deleteTeamDialog-@team.Id"
+                                    class="workspace-delete-dialog"
+                                    aria-labelledby="deleteTeamTitle-@team.Id">
+                                <h2 id="deleteTeamTitle-@team.Id">Delete Team?</h2>
+
+                                <p>
+                                    Are you sure you want to delete <strong>@team.Name</strong>?
+                                </p>
+
+                                <p class="text-danger">
+                                    Only this Team will be deleted. Its Workspace and Projects will remain.
+                                </p>
+
+                                <div class="workspace-form-card__actions">
+                                    <button type="button"
+                                            class="btn tf-btn-outline"
+                                            onclick="document.getElementById('deleteTeamDialog-@team.Id').close()">
+                                        Cancel
+                                    </button>
+
+                                    <form asp-controller="Teams"
+                                          asp-action="Delete"
+                                          method="post">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@team.Id" />
+
+                                        <button type="submit"
+                                                class="btn tf-btn-outline workspace-btn-delete">
+                                            Yes, Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </dialog>
+                        </article>
+                    }
+                </div>
+            }
+        </div>
+
+        <section class="workspace-invitations">
+            <header class="workspace-invitations__header">
+                <div>
+                    <h2>Invite Members</h2>
+                    <p class="tf-muted">Add new members to your Workspace.</p>
+                </div>
+            </header>
+
+            @if (TempData["InvitationError"] is string invitationError)
+            {
+                <div class="workspace-message workspace-message--error" role="alert">
+                    @invitationError
+                </div>
+            }
+
+            @if (TempData["InvitationSuccess"] is string invitationSuccess)
+            {
+                <div class="workspace-message workspace-message--success" role="status">
+                    @invitationSuccess
+                </div>
+            }
+
+            <form asp-controller="WorkSpace"
+                  asp-action="InviteMember"
+                  method="post"
+                  class="workspace-invite-form">
+                @Html.AntiForgeryToken()
+
+                <input type="hidden" name="WorkspaceId" value="@Model.Id" />
+
+                <label for="inviteEmail" class="visually-hidden">Email address</label>
+                <input id="inviteEmail"
+                       name="Email"
+                       type="email"
+                       class="form-control tf-form-control"
+                       placeholder="Enter email address..."
+                       maxlength="250"
+                       required />
+
+                <button type="submit" class="btn tf-btn-primary">
+                    <i class="bi bi-send-fill" aria-hidden="true"></i>
+                    Send Invite
+                </button>
+            </form>
+
+            @if (Model.Invitations.Count > 0)
+            {
+                <div class="workspace-pending-invitations">
+                    <h3>Pending Invitations</h3>
+
+                    @foreach (var invitation in Model.Invitations.OrderByDescending(invitation => invitation.CreatedAt))
+                    {
+                        <article class="tf-card p-3 workspace-invitation-item">
+                            <div>
+                                <strong>@invitation.Email</strong>
+
+                                <span class="tf-badge tf-badge-warning">
+                                    @invitation.Status
+                                </span>
+                            </div>
+
+                            <form asp-controller="WorkSpace"
+                                  asp-action="DeleteInvitation"
+                                  method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@invitation.Id" />
+
+                                <button type="submit"
+                                        class="btn tf-btn-outline workspace-btn-delete workspace-icon-button"
+                                        aria-label="Remove invitation for @invitation.Email"
+                                        title="Remove invitation">
+                                    <i class="bi bi-trash" aria-hidden="true"></i>
+                                </button>
+                            </form>
+                        </article>
+                    }
+                </div>
+            }
+        </section>
+
+        <div class="workspace-activity">
+            <h2>Recent Activity</h2>
+
+            @if (latestActivities.Count == 0)
+            {
+                <div class="tf-card p-3">
+                    <p class="tf-muted mb-0">No activity recorded yet.</p>
+                </div>
+            }
+            else
+            {
+                @foreach (var activity in latestActivities)
+                {
+                    <article class="tf-card p-3 mb-3">
+                        <h3 class="h6">@activity.Action</h3>
+
+                        @if (!string.IsNullOrWhiteSpace(activity.Description))
+                        {
+                            <p class="tf-muted">@activity.Description</p>
+                        }
+
+                        <small class="tf-muted">
+                            By @activity.User.FullName ·
+                            @activity.CreatedAt.ToLocalTime().ToString("dd MMM yyyy, h:mm tt")
+                        </small>
+                    </article>
+                }
+
+                @if (olderActivities.Count > 0)
+                {
+                    <details class="workspace-activity__older">
+                        <summary>Show older activity (@olderActivities.Count)</summary>
+
+                        <div class="workspace-activity__older-list">
+                            @foreach (var activity in olderActivities)
+                            {
+                                <article class="tf-card p-3">
+                                    <h3 class="h6">@activity.Action</h3>
+
+                                    @if (!string.IsNullOrWhiteSpace(activity.Description))
+                                    {
+                                        <p class="tf-muted">@activity.Description</p>
+                                    }
+
+                                    <small class="tf-muted">
+                                        By @activity.User.FullName ·
+                                        @activity.CreatedAt.ToLocalTime().ToString("dd MMM yyyy, h:mm tt")
+                                    </small>
+                                </article>
+                            }
+                        </div>
+                    </details>
+                }
+            }
+        </div>
+    </div>
+
+    <div class="workspace-projects">
+        <h2>Projects</h2>
+
+        @if (Model.Projects.Count == 0)
+        {
+            <div class="workspace-empty-state">
+                <p>No Projects in this Workspace yet.</p>
+            </div>
+        }
+        else
+        {
+            <div class="workspace-list">
+                @foreach (var project in Model.Projects)
+                {
+                    <article class="workspace-card">
+                        <h3>@project.Name</h3>
+
+                        @if (!string.IsNullOrWhiteSpace(project.Description))
+                        {
+                            <p>@project.Description</p>
+                        }
+
+                        <small>
+                            Created @project.CreatedAt.ToString("dd MMM yyyy")
+                        </small>
+                    </article>
+                }
+            </div>
+        }
+    </div>
+</section>

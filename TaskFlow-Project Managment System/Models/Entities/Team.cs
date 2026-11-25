@@ -1,0 +1,17 @@
+﻿namespace TaskFlow_Project_Managment_System.Models
+{
+    public class Team
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; } = string.Empty;
+        public string? Description { get; set; }
+
+        public int WorkspaceId { get; set; }
+        public WorkSpace WorkSpace { get; set; } = null!;
+
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public ICollection<User> Members { get; set; } = new List<User>();
+    }
+}

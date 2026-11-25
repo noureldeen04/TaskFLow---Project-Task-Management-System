@@ -1,0 +1,47 @@
+﻿@model TaskFlow_Project_Managment_System.Models.ViewModels.CreateTeamViewModel
+
+@{
+    ViewData["Title"] = "Create Team";
+}
+
+<section class="workspace-page">
+    <div class="workspace-form-card">
+        <h1>Create Team</h1>
+
+        <form asp-action="Create" method="post">
+            <input asp-for="WorkspaceId" type="hidden" />
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label">Team name</label>
+                <input asp-for="Name" class="form-control" maxlength="100" required />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label">Description</label>
+                <textarea asp-for="Description"
+                          class="form-control"
+                          maxlength="500"
+                          rows="4"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="workspace-form-card__actions">
+                <a asp-controller="WorkSpace"
+                   asp-action="Details"
+                   asp-route-id="@Model.WorkspaceId"
+                   class="btn btn-outline-secondary">
+                    Cancel
+                </a>
+
+                <button type="submit" class="btn btn-primary">Create Team</button>
+            </div>
+        </form>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

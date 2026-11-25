@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using TaskFlow_Project_Managment_System.Context;
-
 namespace TaskFlow_Project_Managment_System
 {
     public class Program
@@ -8,6 +7,14 @@ namespace TaskFlow_Project_Managment_System
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
+            builder.Services.AddDbContext<WorkFlowContext>(options =>
+                options.UseSqlServer(connectionString));
+
+
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();

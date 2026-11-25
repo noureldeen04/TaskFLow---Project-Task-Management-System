@@ -22,6 +22,41 @@ namespace TaskFlow_Project_Managment_System.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("TaskFlow_Project_Managment_System.Models.ActivityLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WorkspaceId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("WorkspaceId");
+
+                    b.ToTable("ActivityLogs", (string)null);
+                });
+
             modelBuilder.Entity("TaskFlow_Project_Managment_System.Models.Entities.AllTask", b =>
                 {
                     b.Property<int>("Id")
@@ -119,6 +154,36 @@ namespace TaskFlow_Project_Managment_System.Migrations
                     b.ToTable("Projects", (string)null);
                 });
 
+            modelBuilder.Entity("TaskFlow_Project_Managment_System.Models.Team", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("WorkspaceId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WorkspaceId");
+
+                    b.ToTable("Teams", (string)null);
+                });
+
             modelBuilder.Entity("TaskFlow_Project_Managment_System.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -179,6 +244,76 @@ namespace TaskFlow_Project_Managment_System.Migrations
                     b.ToTable("Workspaces", (string)null);
                 });
 
+            modelBuilder.Entity("TaskFlow_Project_Managment_System.Models.WorkspaceInvitation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<int>("InvitedByUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<int>("WorkspaceId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InvitedByUserId");
+
+                    b.HasIndex("WorkspaceId");
+
+                    b.ToTable("WorkspaceInvitations", (string)null);
+                });
+
+            modelBuilder.Entity("TeamUser", b =>
+                {
+                    b.Property<int>("MembersId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TeamsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("MembersId", "TeamsId");
+
+                    b.HasIndex("TeamsId");
+
+                    b.ToTable("TeamUser");
+                });
+
+            modelBuilder.Entity("TaskFlow_Project_Managment_System.Models.ActivityLog", b =>
+                {
+                    b.HasOne("TaskFlow_Project_Managment_System.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("TaskFlow_Project_Managment_System.Models.WorkSpace", "WorkSpace")
+                        .WithMany("ActivityLogs")
+                        .HasForeignKey("WorkspaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+
+                    b.Navigation("WorkSpace");
+                });
+
             modelBuilder.Entity("TaskFlow_Project_Managment_System.Models.Entities.AllTask", b =>
                 {
                     b.HasOne("TaskFlow_Project_Managment_System.Models.User", "AssignedByUser")
@@ -235,6 +370,17 @@ namespace TaskFlow_Project_Managment_System.Migrations
                     b.Navigation("workSpaces");
                 });
 
+            modelBuilder.Entity("TaskFlow_Project_Managment_System.Models.Team", b =>
+                {
+                    b.HasOne("TaskFlow_Project_Managment_System.Models.WorkSpace", "WorkSpace")
+                        .WithMany("Teams")
+                        .HasForeignKey("WorkspaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("WorkSpace");
+                });
+
             modelBuilder.Entity("TaskFlow_Project_Managment_System.Models.User", b =>
                 {
                     b.HasOne("TaskFlow_Project_Managment_System.Models.WorkSpace", "workSpaces")
@@ -254,6 +400,40 @@ namespace TaskFlow_Project_Managment_System.Migrations
                         .IsRequired();
 
                     b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("TaskFlow_Project_Managment_System.Models.WorkspaceInvitation", b =>
+                {
+                    b.HasOne("TaskFlow_Project_Managment_System.Models.User", "InvitedByUser")
+                        .WithMany()
+                        .HasForeignKey("InvitedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("TaskFlow_Project_Managment_System.Models.WorkSpace", "WorkSpace")
+                        .WithMany("Invitations")
+                        .HasForeignKey("WorkspaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("InvitedByUser");
+
+                    b.Navigation("WorkSpace");
+                });
+
+            modelBuilder.Entity("TeamUser", b =>
+                {
+                    b.HasOne("TaskFlow_Project_Managment_System.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("MembersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TaskFlow_Project_Managment_System.Models.Team", null)
+                        .WithMany()
+                        .HasForeignKey("TeamsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("TaskFlow_Project_Managment_System.Models.Project", b =>
@@ -276,9 +456,15 @@ namespace TaskFlow_Project_Managment_System.Migrations
 
             modelBuilder.Entity("TaskFlow_Project_Managment_System.Models.WorkSpace", b =>
                 {
+                    b.Navigation("ActivityLogs");
+
+                    b.Navigation("Invitations");
+
                     b.Navigation("Members");
 
                     b.Navigation("Projects");
+
+                    b.Navigation("Teams");
                 });
 #pragma warning restore 612, 618
         }

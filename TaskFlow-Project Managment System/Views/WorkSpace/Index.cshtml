@@ -1,0 +1,109 @@
+﻿@model List<TaskFlow_Project_Managment_System.Models.WorkSpace>
+
+@{
+    ViewData["Title"] = "Workspaces";
+}
+
+<section class="workspace-page">
+    <header class="workspace-page__header">
+        <div>
+            <h1>Workspaces</h1>
+            <p>Manage your workspaces and teams.</p>
+        </div>
+
+        <button type="button"
+                class="btn tf-btn-primary"
+                onclick="document.getElementById('createWorkspaceDialog').showModal()">
+            + Create New Workspace
+        </button>
+    </header>
+
+    @if (TempData["WorkspaceError"] is string workspaceError)
+    {
+        <div class="workspace-message workspace-message--error" role="alert">
+            @workspaceError
+        </div>
+    }
+
+    <dialog id="createWorkspaceDialog"
+            class="workspace-form-dialog"
+            aria-labelledby="createWorkspaceTitle">
+        <h2 id="createWorkspaceTitle">Create Workspace</h2>
+
+        <form asp-controller="WorkSpace"
+              asp-action="Create"
+              method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="mb-3">
+                <label for="newWorkspaceName" class="form-label">Workspace name</label>
+                <input id="newWorkspaceName"
+                       name="Name"
+                       type="text"
+                       class="form-control tf-form-control"
+                       maxlength="100"
+                       required />
+            </div>
+
+            <div class="mb-3">
+                <label for="newWorkspaceDescription" class="form-label">Description</label>
+                <textarea id="newWorkspaceDescription"
+                          name="Description"
+                          class="form-control tf-form-control"
+                          maxlength="500"
+                          rows="3"></textarea>
+            </div>
+
+            <div class="workspace-form-card__actions">
+                <button type="button"
+                        class="btn tf-btn-outline"
+                        onclick="document.getElementById('createWorkspaceDialog').close()">
+                    Cancel
+                </button>
+
+                <button type="submit" class="btn tf-btn-primary">
+                    Create Workspace
+                </button>
+            </div>
+        </form>
+    </dialog>
+
+    @if (Model.Count == 0)
+    {
+        <div class="workspace-empty-state">
+            <h2>No Workspaces yet</h2>
+            <p>Create a Workspace to organize its teams, members, and projects.</p>
+        </div>
+    }
+    else
+    {
+        <div class="workspace-list">
+            @foreach (var workspace in Model)
+            {
+                <article class="workspace-card">
+                    <h2>@workspace.Name</h2>
+
+                    @if (!string.IsNullOrWhiteSpace(workspace.Description))
+                    {
+                        <p>@workspace.Description</p>
+                    }
+
+                    <div class="workspace-card__counts">
+                        <span>@workspace.Teams.Count Teams</span>
+                        <span>@workspace.Projects.Count Projects</span>
+                    </div>
+
+                    <small>
+                        Created @workspace.CreatedAt.ToString("dd MMM yyyy")
+                    </small>
+
+                    <a asp-action="Details"
+                       asp-route-id="@workspace.Id"
+                       class="btn btn-outline-primary">
+                        View Workspace
+                    </a>
+                </article>
+            }
+        </div>
+    }
+</section>
