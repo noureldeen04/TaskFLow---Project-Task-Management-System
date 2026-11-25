@@ -1,10 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>TaskFlow_Project_Managment_System</RootNamespace>
+    <UserSecretsId>1e2cd43f-2f45-488d-a238-a695535a206a</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

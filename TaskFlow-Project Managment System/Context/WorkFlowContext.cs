@@ -6,6 +6,9 @@ namespace TaskFlow_Project_Managment_System.Context
 {
     public class WorkFlowContext : DbContext
     {
+        public WorkFlowContext(DbContextOptions<WorkFlowContext> options) : base(options)
+        {
+        }
 
 
         public DbSet<User> Users { get; set; }
@@ -15,6 +18,7 @@ namespace TaskFlow_Project_Managment_System.Context
         public DbSet<Project> Projects { get; set; }
 
         public DbSet<AllTask> Tasks { get; set; }
+        public DbSet<WorkspaceMember> WorkspaceMembers { get; set; }
 
 
         // Nour-Zoubaa Connection string
@@ -120,7 +124,28 @@ namespace TaskFlow_Project_Managment_System.Context
                .IsRequired(false)
                .OnDelete(DeleteBehavior.Restrict);
             });
-           
+            modelBuilder.Entity<WorkspaceMember>(e =>
+            {
+                e.ToTable("WorkspaceMembers");
+                e.HasKey(m => m.Id);
+
+                e.HasIndex(m => new { m.WorkspaceId, m.UserId }).IsUnique();
+
+                e.Property(m => m.Role)
+                    .HasConversion<string>()
+                    .IsRequired()
+                    .HasMaxLength(20);
+
+                e.HasOne(m => m.Workspace)
+                    .WithMany()
+                    .HasForeignKey(m => m.WorkspaceId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                e.HasOne(m => m.User)
+                    .WithMany()
+                    .HasForeignKey(m => m.UserId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
 
 
         }
