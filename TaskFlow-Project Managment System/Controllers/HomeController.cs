@@ -1,9 +1,12 @@
-using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using TaskFlow_Project_Managment_System.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
 
 namespace TaskFlow_Project_Managment_System.Controllers
 {
+     [Authorize]
     public class HomeController : Controller
     {
        

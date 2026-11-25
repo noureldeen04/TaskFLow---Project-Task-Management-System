@@ -1,3 +1,11 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using TaskFlow_Project_Managment_System.Context;
+using TaskFlow_Project_Managment_System.Models;
+using TaskFlow_Project_Managment_System.Services;
+
+
+
 namespace TaskFlow_Project_Managment_System
 {
     public class Program
@@ -9,6 +17,26 @@ namespace TaskFlow_Project_Managment_System
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            // Authauntcation
+            builder.Services.AddAuthentication("TaskFlowCookie")
+            .AddCookie("TaskFlowCookie", options =>
+            {
+                options.LoginPath = "/Account/Login";
+                options.LogoutPath = "/Account/Logout";
+                options.AccessDeniedPath = "/Account/AccessDenied";
+                options.ExpireTimeSpan = TimeSpan.FromHours(8);
+                options.SlidingExpiration = true;
+            });
+
+            builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+
+
+            // Database connection (value comes from user-secrets)
+            builder.Services.AddDbContext<WorkFlowContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+                builder.Services.AddScoped<IPermissionService, PermissionService>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -16,9 +44,12 @@ namespace TaskFlow_Project_Managment_System
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-            app.UseRouting();
+            app.UseRouting(); 
+            app.UseAuthentication();
+
 
             app.UseStaticFiles();
+
 
             app.UseAuthorization();
 

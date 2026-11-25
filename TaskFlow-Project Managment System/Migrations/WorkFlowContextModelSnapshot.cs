@@ -62,6 +62,35 @@ namespace TaskFlow_Project_Managment_System.Migrations
                     b.ToTable("Tasks", (string)null);
                 });
 
+            modelBuilder.Entity("TaskFlow_Project_Managment_System.Models.Entities.WorkspaceMember", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WorkspaceId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("WorkspaceId", "UserId")
+                        .IsUnique();
+
+                    b.ToTable("WorkspaceMembers", (string)null);
+                });
+
             modelBuilder.Entity("TaskFlow_Project_Managment_System.Models.Project", b =>
                 {
                     b.Property<int>("Id")
@@ -114,6 +143,10 @@ namespace TaskFlow_Project_Managment_System.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("WorkspaceId")
                         .HasColumnType("int");
@@ -181,6 +214,25 @@ namespace TaskFlow_Project_Managment_System.Migrations
                     b.Navigation("CreatedByUser");
 
                     b.Navigation("projects");
+                });
+
+            modelBuilder.Entity("TaskFlow_Project_Managment_System.Models.Entities.WorkspaceMember", b =>
+                {
+                    b.HasOne("TaskFlow_Project_Managment_System.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("TaskFlow_Project_Managment_System.Models.WorkSpace", "Workspace")
+                        .WithMany()
+                        .HasForeignKey("WorkspaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+
+                    b.Navigation("Workspace");
                 });
 
             modelBuilder.Entity("TaskFlow_Project_Managment_System.Models.Project", b =>
