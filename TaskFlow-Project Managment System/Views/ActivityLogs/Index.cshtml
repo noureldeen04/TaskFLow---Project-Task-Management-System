@@ -1,0 +1,56 @@
+@{
+    ViewData["Title"] = "Activity Logs";
+}
+
+<section class="tf-dashboard" aria-labelledby="activity-title">
+    <header class="tf-dashboard-heading">
+        <div>
+            <h1 class="tf-page-heading" id="activity-title">Activity Logs</h1>
+            <p class="tf-page-subtitle">Review important actions across your workspace.</p>
+        </div>
+        <button class="btn tf-btn-outline" type="button" disabled aria-describedby="activity-limit"><i class="bi bi-download me-2" aria-hidden="true"></i>Export CSV</button>
+    </header>
+
+    <div class="tf-notice" id="activity-limit" role="note">
+        <i class="bi bi-info-circle" aria-hidden="true"></i>
+        <div><strong>Audit logging is not connected yet.</strong> The current application has no activity log entity or authenticated user flow. Filters and export are shown as a layout preview and will be enabled when audit records are available.</div>
+    </div>
+
+    <article class="tf-card tf-filter-card" aria-label="Activity log filters">
+        <div class="tf-filter-grid">
+            <label class="tf-filter-field"><span>Search</span><input class="form-control tf-form-control" type="search" placeholder="Search descriptions" disabled /></label>
+            <label class="tf-filter-field"><span>User</span><select class="form-select tf-form-control" disabled><option>All users</option></select></label>
+            <label class="tf-filter-field"><span>Entity</span><select class="form-select tf-form-control" disabled><option>All entities</option><option>Tasks</option><option>Projects</option><option>Teams</option></select></label>
+            <label class="tf-filter-field"><span>Action</span><select class="form-select tf-form-control" disabled><option>All actions</option><option>Created</option><option>Updated</option><option>Deleted</option></select></label>
+            <label class="tf-filter-field"><span>From</span><input class="form-control tf-form-control" type="date" disabled /></label>
+            <label class="tf-filter-field"><span>To</span><input class="form-control tf-form-control" type="date" disabled /></label>
+        </div>
+        <div class="tf-filter-actions">
+            <button class="btn tf-btn-primary" type="button" disabled>Apply filters</button>
+            <button class="btn tf-btn-outline" type="button" disabled>Reset</button>
+        </div>
+    </article>
+
+    <article class="tf-card tf-logs-card">
+        <div class="tf-card-header tf-logs-header">
+            <div><h2>Recent activity</h2><p>Actions recorded by TaskFlow</p></div>
+            <span class="tf-badge tf-badge-primary">0 records</span>
+        </div>
+        <div class="table-responsive">
+            <table class="table tf-table">
+                <thead><tr><th scope="col">User</th><th scope="col">Action</th><th scope="col">Entity</th><th scope="col">Description</th><th scope="col">Date &amp; time</th><th scope="col"><span class="visually-hidden">Details</span></th></tr></thead>
+                <tbody><tr><td colspan="6"><div class="tf-empty-state"><i class="bi bi-clock-history" aria-hidden="true"></i><strong>No activity has been recorded</strong><span>Activity will appear here after audit logging is implemented.</span></div></td></tr></tbody>
+            </table>
+        </div>
+        <div class="tf-pagination" aria-label="Activity log pagination">
+            <span class="tf-muted">Showing 0 records</span>
+            <div><button class="btn tf-btn-outline btn-sm" type="button" disabled aria-label="Previous page">Previous</button><button class="btn tf-btn-outline btn-sm" type="button" disabled aria-label="Next page">Next</button></div>
+        </div>
+    </article>
+
+    <p class="tf-auth-note"><i class="bi bi-shield-lock" aria-hidden="true"></i> Admin-only access cannot be enforced until authentication and roles are configured in the application.</p>
+</section>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" />
+}

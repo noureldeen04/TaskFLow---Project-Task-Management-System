@@ -6,9 +6,9 @@ namespace TaskFlow_Project_Managment_System.Controllers
 {
     public class HomeController : Controller
     {
-       
         public IActionResult Index()
         {
+            ViewData["Title"] = "Dashboard";
             return View();
         }
 
