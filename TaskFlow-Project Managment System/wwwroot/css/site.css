@@ -134,6 +134,16 @@ button, input, select, textarea { font: inherit; }
 .tf-breadcrumb { align-items: center; color: var(--tf-text-muted); display: flex; gap: 10px; min-width: 0; }
 .tf-breadcrumb > i { font-size: .7rem; }
 .tf-breadcrumb-current { color: var(--tf-text); font-weight: 600; }
+.tf-navbar-project-link {
+    align-items: center;
+    border-radius: var(--tf-radius-sm);
+    color: var(--tf-text-muted);
+    display: inline-flex;
+    gap: var(--tf-space-2);
+    padding: 4px 6px;
+    text-decoration: none;
+}
+.tf-navbar-project-link:hover { background: var(--tf-surface-hover); color: var(--tf-text); }
 .tf-icon-button {
     align-items: center;
     background: transparent;
@@ -147,7 +157,7 @@ button, input, select, textarea { font: inherit; }
     width: 38px;
 }
 .tf-icon-button:hover { background: var(--tf-surface-hover); color: var(--tf-text); }
-.tf-icon-button:focus-visible, .tf-nav-link:focus-visible, .tf-brand-link:focus-visible {
+.tf-icon-button:focus-visible, .tf-nav-link:focus-visible, .tf-brand-link:focus-visible, .tf-navbar-project-link:focus-visible {
     outline: 3px solid color-mix(in srgb, var(--tf-primary) 35%, transparent);
     outline-offset: 2px;
 }

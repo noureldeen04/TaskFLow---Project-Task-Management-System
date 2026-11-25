@@ -62,6 +62,25 @@ namespace TaskFlow_Project_Managment_System.Migrations
                     b.ToTable("Tasks", (string)null);
                 });
 
+            modelBuilder.Entity("TaskFlow_Project_Managment_System.Models.Entities.ProjectPermissionSettings", b =>
+                {
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EditAccess")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ViewAccess")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProjectId");
+
+                    b.ToTable("ProjectPermissionSettings", (string)null);
+                });
+
             modelBuilder.Entity("TaskFlow_Project_Managment_System.Models.Project", b =>
                 {
                     b.Property<int>("Id")
@@ -84,6 +103,9 @@ namespace TaskFlow_Project_Managment_System.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("Template")
+                        .HasColumnType("int");
 
                     b.Property<int>("WorkspaceId")
                         .HasColumnType("int");
@@ -183,6 +205,17 @@ namespace TaskFlow_Project_Managment_System.Migrations
                     b.Navigation("projects");
                 });
 
+            modelBuilder.Entity("TaskFlow_Project_Managment_System.Models.Entities.ProjectPermissionSettings", b =>
+                {
+                    b.HasOne("TaskFlow_Project_Managment_System.Models.Project", "Project")
+                        .WithOne("PermissionSettings")
+                        .HasForeignKey("TaskFlow_Project_Managment_System.Models.Entities.ProjectPermissionSettings", "ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+                });
+
             modelBuilder.Entity("TaskFlow_Project_Managment_System.Models.Project", b =>
                 {
                     b.HasOne("TaskFlow_Project_Managment_System.Models.User", "Users")
@@ -225,6 +258,8 @@ namespace TaskFlow_Project_Managment_System.Migrations
 
             modelBuilder.Entity("TaskFlow_Project_Managment_System.Models.Project", b =>
                 {
+                    b.Navigation("PermissionSettings");
+
                     b.Navigation("ProjectTasks");
                 });
 

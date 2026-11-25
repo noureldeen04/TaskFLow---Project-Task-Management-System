@@ -6,6 +6,7 @@ namespace TaskFlow_Project_Managment_System.Context
 {
     public class WorkFlowContext : DbContext
     {
+        public WorkFlowContext(DbContextOptions<WorkFlowContext> options) : base(options) { }
 
 
         public DbSet<User> Users { get; set; }
@@ -16,12 +17,14 @@ namespace TaskFlow_Project_Managment_System.Context
 
         public DbSet<AllTask> Tasks { get; set; }
 
+        public DbSet<ProjectPermissionSettings> ProjectPermissionSettings { get; set; }
+
 
         // Nour-Zoubaa Connection string
         // "Data Source=ZOUBAA\\SQLEXPRESS;Initial Catalog=TaskFlowFP;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30"
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer();
+            optionsBuilder.UseSqlServer("Data Source=ZOUBAA\\SQLEXPRESS;Initial Catalog=TaskFlowFP;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -86,6 +89,20 @@ namespace TaskFlow_Project_Managment_System.Context
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
+                e.HasOne(p => p.PermissionSettings)
+                    .WithOne(settings => settings.Project)
+                    .HasForeignKey<ProjectPermissionSettings>(settings => settings.ProjectId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+            });
+
+            modelBuilder.Entity<ProjectPermissionSettings>(e =>
+            {
+                e.ToTable("ProjectPermissionSettings");
+                e.HasKey(settings => settings.ProjectId);
+                e.Property(settings => settings.ViewAccess).IsRequired();
+                e.Property(settings => settings.EditAccess).IsRequired();
+                e.Property(settings => settings.UpdatedAt).IsRequired();
             });
 
             modelBuilder.Entity<AllTask>(e =>

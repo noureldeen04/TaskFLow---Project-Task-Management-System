@@ -2,6 +2,8 @@
     var currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? "Home";
     var currentAction = ViewContext.RouteData.Values["action"]?.ToString() ?? "Index";
     var displayTitle = ViewData["Title"] as string ?? currentController;
+    var inProjectSection = string.Equals(currentController, "Project", StringComparison.OrdinalIgnoreCase);
+    var projectId = ViewData["ProjectId"] is int selectedProjectId ? selectedProjectId : (int?)null;
 }
 <header class="tf-topbar">
     <div class="tf-topbar-left">
@@ -10,8 +12,23 @@
             <i class="bi bi-list" aria-hidden="true"></i>
         </button>
         <div class="tf-breadcrumb">
-            <span class="tf-breadcrumb-muted">TaskFlow</span>
+            <span class="tf-breadcrumb-muted">TaskFlow Workspace</span>
+            @if (inProjectSection)
+            {
+                if (projectId.HasValue)
+                {
+                    <a asp-controller="Project" asp-action="Details" asp-route-id="@projectId.Value" class="tf-navbar-project-link">
+                        <i class="bi bi-kanban" aria-hidden="true"></i><span>Project</span>
+                    </a>
+                }
+                else
+                {
+                    <a asp-controller="Project" asp-action="Index" class="tf-navbar-project-link">
+                        <i class="bi bi-kanban" aria-hidden="true"></i><span>Project</span>
+                    </a>
+                }
             <i class="bi bi-chevron-right" aria-hidden="true"></i>
+            }
             <span class="tf-breadcrumb-current">@displayTitle</span>
         </div>
     </div>

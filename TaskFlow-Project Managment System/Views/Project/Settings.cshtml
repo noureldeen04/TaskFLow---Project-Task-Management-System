@@ -1,0 +1,80 @@
+@model ProjectSettingsViewModel
+@{
+    ViewData["Title"] = "Project Settings";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/project.css" asp-append-version="true" />
+}
+
+<div class="project-page">
+    <div class="project-page-header">
+        <div>
+            <p class="project-eyebrow">@Model.Name</p>
+            <h1 class="tf-page-heading">Project settings</h1>
+            <p class="tf-page-subtitle">Update this project's details and configuration.</p>
+        </div>
+        <a asp-controller="Project" asp-action="Details" asp-route-id="@Model.Id" class="btn tf-btn-outline">
+            <i class="bi bi-arrow-left" aria-hidden="true"></i> Back to project
+        </a>
+    </div>
+
+    @if (TempData["ProjectSettingsSuccess"] is string successMessage)
+    {
+        <div class="alert alert-success project-alert-success" role="status">@successMessage</div>
+    }
+
+    <form asp-controller="Project" asp-action="Settings" asp-route-id="@Model.Id" method="post" class="project-form">
+        <input asp-for="Id" type="hidden" />
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+        <section class="tf-card project-form-card" aria-labelledby="general-settings-heading">
+            <div class="tf-card-header">
+                <h2 class="project-section-heading" id="general-settings-heading">General settings</h2>
+                <p class="project-section-description">Manage the name, description, and workspace for this project.</p>
+            </div>
+            <div class="tf-card-body project-fields">
+                <div>
+                    <label asp-for="Name" class="form-label project-label"></label>
+                    <input asp-for="Name" class="form-control tf-form-control" maxlength="100" />
+                    <span asp-validation-for="Name" class="text-danger project-validation"></span>
+                </div>
+                <div>
+                    <label asp-for="Description" class="form-label project-label"></label>
+                    <textarea asp-for="Description" class="form-control tf-form-control project-description" maxlength="1000" rows="4"></textarea>
+                    <span asp-validation-for="Description" class="text-danger project-validation"></span>
+                </div>
+                <div>
+                    <label asp-for="WorkspaceId" class="form-label project-label"></label>
+                    <select asp-for="WorkspaceId" asp-items="Model.Workspaces" class="form-select tf-form-control">
+                        <option value="0">Select a workspace</option>
+                    </select>
+                    <span asp-validation-for="WorkspaceId" class="text-danger project-validation"></span>
+                </div>
+            </div>
+        </section>
+
+        <section class="tf-card project-form-card" aria-labelledby="permission-settings-heading">
+            <div class="tf-card-header">
+                <h2 class="project-section-heading" id="permission-settings-heading">View/Edit Permissions</h2>
+                <p class="project-section-description">Review project access configuration separately from general details.</p>
+            </div>
+            <div class="tf-card-body project-permission-summary">
+                <p>Permission configuration is managed on its own page. These settings are stored for future authorization work and do not restrict access today.</p>
+                <a asp-controller="Project" asp-action="Permissions" asp-route-id="@Model.Id" class="btn tf-btn-outline">
+                    View/Edit Permissions <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                </a>
+            </div>
+        </section>
+
+        <div class="project-form-actions">
+            <a asp-controller="Project" asp-action="Details" asp-route-id="@Model.Id" class="btn tf-btn-outline">Cancel</a>
+            <button type="submit" class="btn tf-btn-primary"><i class="bi bi-check2" aria-hidden="true"></i> Save settings</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+}

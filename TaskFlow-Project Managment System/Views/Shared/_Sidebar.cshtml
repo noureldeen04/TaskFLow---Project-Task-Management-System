@@ -1,6 +1,9 @@
 @{
     var currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
     var currentAction = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
+    var hasProjectContext = string.Equals(currentController, "Project", StringComparison.OrdinalIgnoreCase)
+        && ViewData["ProjectId"] is int;
+    var projectId = hasProjectContext ? (int)ViewData["ProjectId"]! : 0;
     bool IsActive(string controller, string? action = null) =>
         string.Equals(currentController, controller, StringComparison.OrdinalIgnoreCase) &&
         (action is null || string.Equals(currentAction, action, StringComparison.OrdinalIgnoreCase));
@@ -26,11 +29,20 @@
                title="Overview">
                 <i class="bi bi-grid-1x2" aria-hidden="true"></i><span>Overview</span>
             </a>
-            <a asp-controller="Projects" asp-action="Index"
-               class="tf-nav-link @(IsActive("Projects") ? "active" : "")"
-               aria-current="@(IsActive("Projects") ? "page" : null)" title="Projects">
+            <a asp-controller="Project" asp-action="Index"
+               class="tf-nav-link @(IsActive("Project", "Index") || IsActive("Project", "Details") || IsActive("Project", "Settings") || IsActive("Project", "Permissions") ? "active" : "")"
+               aria-current="@(IsActive("Project", "Index") || IsActive("Project", "Details") || IsActive("Project", "Settings") || IsActive("Project", "Permissions") ? "page" : null)" title="Projects">
                 <i class="bi bi-kanban" aria-hidden="true"></i><span>Projects</span>
             </a>
+            @if (hasProjectContext)
+            {
+                <a asp-controller="Project" asp-action="Settings" asp-route-id="@projectId"
+                   class="tf-nav-link tf-nav-link-contextual @(IsActive("Project", "Settings") || IsActive("Project", "Permissions") ? "active" : "")"
+                   aria-current="@(IsActive("Project", "Settings") || IsActive("Project", "Permissions") ? "page" : null)"
+                   title="Project Settings">
+                    <i class="bi bi-sliders" aria-hidden="true"></i><span>Project Settings</span>
+                </a>
+            }
             <a asp-controller="Tasks" asp-action="Index"
                class="tf-nav-link @(IsActive("Tasks") ? "active" : "")"
                aria-current="@(IsActive("Tasks") ? "page" : null)" title="My tasks">

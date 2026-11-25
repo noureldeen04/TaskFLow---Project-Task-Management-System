@@ -1,0 +1,125 @@
+@model ProjectCreateViewModel
+@{
+    ViewData["Title"] = "Create Project";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/project.css" asp-append-version="true" />
+}
+
+<div class="project-page">
+    <div class="project-page-header">
+        <div>
+            <p class="project-eyebrow">Workspace setup</p>
+            <h1 class="tf-page-heading">Create a project</h1>
+            <p class="tf-page-subtitle">Set up a place for your team to plan and track work.</p>
+        </div>
+        <a asp-controller="Project" asp-action="Index" class="btn tf-btn-outline">
+            <i class="bi bi-arrow-left" aria-hidden="true"></i> Back to projects
+        </a>
+    </div>
+
+    <form asp-controller="Project" asp-action="Create" method="post" class="project-form">
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+        <section class="tf-card project-form-card" aria-labelledby="project-details-heading">
+            <div class="tf-card-header">
+                <h2 class="project-section-heading" id="project-details-heading">Project details</h2>
+                <p class="project-section-description">Give your project a name and choose where it belongs.</p>
+            </div>
+            <div class="tf-card-body project-fields">
+                <div>
+                    <label asp-for="Name" class="form-label project-label"></label>
+                    <input asp-for="Name" class="form-control tf-form-control" autocomplete="off" maxlength="100" placeholder="e.g. Website redesign" required />
+                    <span asp-validation-for="Name" class="text-danger project-validation"></span>
+                </div>
+                <div>
+                    <label asp-for="Description" class="form-label project-label"></label>
+                    <textarea asp-for="Description" class="form-control tf-form-control project-description" maxlength="1000" rows="4" placeholder="What is this project about?"></textarea>
+                    <span asp-validation-for="Description" class="text-danger project-validation"></span>
+                </div>
+                <div class="project-related-fields">
+                    <div>
+                        <label asp-for="WorkspaceId" class="form-label project-label"></label>
+                        <select asp-for="WorkspaceId" asp-items="Model.Workspaces" class="form-select tf-form-control">
+                            <option value="0">Select a workspace</option>
+                        </select>
+                        <span asp-validation-for="WorkspaceId" class="text-danger project-validation"></span>
+                        @if (Model.Workspaces.Count == 0)
+                        {
+                            <small class="tf-muted">No workspaces are available. Add a workspace before creating a project.</small>
+                        }
+                    </div>
+                    <div>
+                        <label asp-for="CreatedByUserId" class="form-label project-label"></label>
+                        <select asp-for="CreatedByUserId" asp-items="Model.Users" class="form-select tf-form-control">
+                            <option value="0">Select a creator</option>
+                        </select>
+                        <span asp-validation-for="CreatedByUserId" class="text-danger project-validation"></span>
+                        @if (Model.Users.Count == 0)
+                        {
+                            <small class="tf-muted">No users are available. Add a user before creating a project.</small>
+                        }
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="tf-card project-form-card" aria-labelledby="template-heading">
+            <div class="tf-card-header">
+                <h2 class="project-section-heading" id="template-heading">Choose a template</h2>
+                <p class="project-section-description">Pick a starting point that matches how your team works.</p>
+            </div>
+            <div class="tf-card-body">
+                <span asp-validation-for="Template" class="text-danger project-validation"></span>
+                <div class="project-template-grid" role="radiogroup" aria-labelledby="template-heading">
+                    <label class="project-template-option" for="template-basic">
+                        <input asp-for="Template" class="project-template-radio" id="template-basic" type="radio" value="Basic" />
+                        <span class="project-template-card">
+                            <span class="project-template-icon"><i class="bi bi-list-check" aria-hidden="true"></i></span>
+                            <span class="project-template-copy">
+                                <strong>Basic</strong>
+                                <span>Simple task management with a minimal setup for general work.</span>
+                            </span>
+                            <i class="bi bi-check-circle-fill project-template-check" aria-hidden="true"></i>
+                        </span>
+                    </label>
+                    <label class="project-template-option" for="template-agile">
+                        <input asp-for="Template" class="project-template-radio" id="template-agile" type="radio" value="Agile" />
+                        <span class="project-template-card">
+                            <span class="project-template-icon"><i class="bi bi-kanban" aria-hidden="true"></i></span>
+                            <span class="project-template-copy">
+                                <strong>Agile</strong>
+                                <span>Flexible, iterative work organized through Kanban style stages.</span>
+                            </span>
+                            <i class="bi bi-check-circle-fill project-template-check" aria-hidden="true"></i>
+                        </span>
+                    </label>
+                    <label class="project-template-option" for="template-scrum">
+                        <input asp-for="Template" class="project-template-radio" id="template-scrum" type="radio" value="Scrum" />
+                        <span class="project-template-card">
+                            <span class="project-template-icon"><i class="bi bi-arrow-repeat" aria-hidden="true"></i></span>
+                            <span class="project-template-copy">
+                                <strong>Scrum</strong>
+                                <span>Sprint oriented planning for teams following Scrum practices.</span>
+                            </span>
+                            <i class="bi bi-check-circle-fill project-template-check" aria-hidden="true"></i>
+                        </span>
+                    </label>
+                </div>
+            </div>
+        </section>
+
+        <div class="project-form-actions">
+            <a asp-controller="Project" asp-action="Index" class="btn tf-btn-outline">Cancel</a>
+            <button type="submit" class="btn tf-btn-primary">
+                <i class="bi bi-plus-lg" aria-hidden="true"></i> Create project
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+}

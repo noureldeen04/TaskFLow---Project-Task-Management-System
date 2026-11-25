@@ -1,0 +1,38 @@
+@model ProjectDetailsViewModel
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/project.css" asp-append-version="true" />
+}
+
+<div class="project-page">
+    <div class="project-page-header">
+        <div>
+            <p class="project-eyebrow">Project</p>
+            <h1 class="tf-page-heading">@Model.Name</h1>
+            <p class="tf-page-subtitle">@(string.IsNullOrWhiteSpace(Model.Description) ? "No description provided." : Model.Description)</p>
+        </div>
+        <div class="project-page-header-actions">
+            <a asp-controller="Project" asp-action="Settings" asp-route-id="@Model.Id" class="btn tf-btn-primary">
+                <i class="bi bi-sliders" aria-hidden="true"></i> Project settings
+            </a>
+            <a asp-controller="Project" asp-action="Index" class="btn tf-btn-outline">
+                <i class="bi bi-arrow-left" aria-hidden="true"></i> All projects
+            </a>
+        </div>
+    </div>
+            
+    <section class="tf-card project-detail-card" aria-labelledby="project-overview-heading">
+        <div class="tf-card-header"><h2 class="project-section-heading" id="project-overview-heading">Project overview</h2></div>
+        <div class="tf-card-body">
+            <dl class="project-detail-list">
+                <div><dt>Template</dt><dd><span class="tf-badge tf-badge-primary">@Model.Template</span></dd></div>
+                <div><dt>Workspace</dt><dd>@Model.WorkspaceName</dd></div>
+                <div><dt>Created by</dt><dd>@Model.CreatorName</dd></div>
+                <div><dt>Created</dt><dd><time datetime="@Model.CreatedAt.ToString("O")">@Model.CreatedAt.ToLocalTime().ToString("MMMM d, yyyy")</time></dd></div>
+            </dl>
+        </div>
+    </section>
+</div>
