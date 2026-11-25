@@ -63,46 +63,53 @@ ROLES & RESPONSIBILITIES
 TASKFLOW – FEATURES DISTRIBUTION (6 MEMBERS)
 
 Ahmed Essam : Authentication & Roles
-
-- Register & Login
-- Roles: Owner, Admin, Member, Viewer
-- Basic Permission Service
+   
+   - Register & Login
+   - Roles: Admin, User
+   - Basic Permission Service
 
 Shahd hany : Workspace & Teams
 
-- Workspaces
-- Teams & Members
-- Email Invitations
-- Member Activity Tracking
-- Workspace & Team Permissions
+   - Workspaces
+   - Teams & Members
+   - Email Invitations
+   - Member Activity Tracking
+   - Workspace & Team Permissions
 
 Nour-Eldeen Zoubaa : Projects  Team Coordinator 
--Database manipulation
 
-- Create Project
-- Project Templates: Basic, Agile, Scrum
+   -Database manipulation
+   - Create Project
+   - Project Templates: Basic, Agile, Scrum
 
- Julie Wissam : Project Settings & Access 
+ Julie Wissam : Project Settings & Dashboard
+   
+   Dashboard & Analytics:
+   -  Using Chart.js for visualizations:
+   -  Tasks by status (pie chart).
+   -  Project progress (progress bars).
+   -  Team member workload (bar chart).   Overdue tasks highlighting.
+   -   Velocity charts for sprints.   Burndown/burnup charts.
 
-- Project Settings
-- View/Edit Permissions
-- Archive & Restore Projects
+   - Project Settings
+   - View/Edit Permissions
+   - Archive & Restore Projects
 
 Mennatallah Mohamed : Boards & Tasks – Part 1
 
-- Kanban Board
-- Create, Edit, Delete & Archive Tasks
-- Status & Priority
-- Assignees
-- Drag & Drop
+   - Kanban Board
+   - Create, Edit, Delete & Archive Tasks
+   - Status & Priority
+   - Assignees
+   - Drag & Drop
 
   Mahmoud Mohamed : Boards & Tasks – Part 2 + Comments & Attachments
-
-- Subtasks & Custom Fields
-- Comment Threads & Replies
-- File Attachments
-- @Mentions
-- Rich Text Comments
-- WIP Limits &Swimlanes
+   
+   - Subtasks & Custom Fields
+   - Comment Threads & Replies
+   - File Attachments
+   - @Mentions
+   - Rich Text Comments
+   - WIP Limits &Swimlanes
 
 =========================================================================
