@@ -15,11 +15,10 @@ namespace TaskFlow_Project_Managment_System
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-            builder.Services.AddDbContext<WorkFlowContext>(options =>
-            {
-                if (!string.IsNullOrWhiteSpace(connectionString))
-                    options.UseSqlServer(connectionString);
-            });
+            if (string.IsNullOrWhiteSpace(connectionString))
+                throw new InvalidOperationException("Set the ConnectionStrings:DefaultConnection setting before starting TaskFlow.");
+
+            builder.Services.AddDbContext<WorkFlowContext>(options => options.UseSqlServer(connectionString));
 
             builder.Services.AddAuthentication("TaskFlowCookie")
                 .AddCookie("TaskFlowCookie", options =>
@@ -35,6 +34,13 @@ namespace TaskFlow_Project_Managment_System
             builder.Services.AddScoped<IPermissionService, PermissionService>();
 
             var app = builder.Build();
+
+            if (app.Environment.IsDevelopment())
+            {
+                using var scope = app.Services.CreateScope();
+                var db = scope.ServiceProvider.GetRequiredService<WorkFlowContext>();
+                db.Database.Migrate();
+            }
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())

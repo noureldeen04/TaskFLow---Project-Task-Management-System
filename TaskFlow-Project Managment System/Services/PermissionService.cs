@@ -16,7 +16,7 @@ namespace TaskFlow_Project_Managment_System.Services
         private static readonly Dictionary<WorkspacePermission, WorkspaceRole> MinimumRole = new()
         {
             [WorkspacePermission.ViewContent] = WorkspaceRole.Viewer,
-            [WorkspacePermission.ViewDashboard] = WorkspaceRole.Admin,
+            [WorkspacePermission.ViewDashboard] = WorkspaceRole.Viewer,
             [WorkspacePermission.ViewActivityLogs] = WorkspaceRole.Admin,
             [WorkspacePermission.CreateTask] = WorkspaceRole.Member,
             [WorkspacePermission.EditTask] = WorkspaceRole.Member,
