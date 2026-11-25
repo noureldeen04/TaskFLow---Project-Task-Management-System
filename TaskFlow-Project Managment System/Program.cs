@@ -44,8 +44,13 @@ namespace TaskFlow_Project_Managment_System
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-            app.UseRouting();
+            app.UseRouting(); 
             app.UseAuthentication();
+
+
+            app.UseStaticFiles();
+
+
             app.UseAuthorization();
 
             app.MapStaticAssets();
