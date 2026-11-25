@@ -1,7 +1,7 @@
 PROJECT NAME : TaskFLow--Project-Task-Management-System
 
 Instructor name  : Ayed Ali
-
+Group Code : YAT850A_CAI5_SWD5_S1_DEPI5
 Introduction and idea :  
 TaskFlow is a web-based Project and Task Management System designed to help teams 
 organize their work, manage projects, assign tasks, and track progress
@@ -60,18 +60,49 @@ Phase 7          Testing, Integration & Deployment	Final Application & Documenta
 
 ROLES & RESPONSIBILITIES 
 
+TASKFLOW – FEATURES DISTRIBUTION (6 MEMBERS)
 
-Nour-Eldeen kamal Zoubaa ---------- Team coordination, backend development and integration
+Ahmed Essam : Authentication & Roles
 
-Ahmed Essam ----------------------- Database design, SQL Server and Entity Framework Core
+- Register & Login
+- Roles: Owner, Admin, Member, Viewer
+- Basic Permission Service
 
-Julie Wissam William -------------- Backend development, controllers and business logic
+Shahd hany : Workspace & Teams
 
-Shahd hany mohamed ---------------- Frontend development, HTML, CSS and Bootstrap
+- Workspaces
+- Teams & Members
+- Email Invitations
+- Member Activity Tracking
+- Workspace & Team Permissions
 
-Mahmoud Mohamed abd elfatah ------- JavaScript, interactive UI and dashboard
+Nour-Eldeen Zoubaa : Projects  Team Coordinator 
+-Database manipulation
 
-Mennallah Mohamed ------ ---------- GitHub management, documentation and deployment
+- Create Project
+- Project Templates: Basic, Agile, Scrum
 
+ Julie Wissam : Project Settings & Access 
+
+- Project Settings
+- View/Edit Permissions
+- Archive & Restore Projects
+
+Mennatallah Mohamed : Boards & Tasks – Part 1
+
+- Kanban Board
+- Create, Edit, Delete & Archive Tasks
+- Status & Priority
+- Assignees
+- Drag & Drop
+
+  Mahmoud Mohamed : Boards & Tasks – Part 2 + Comments & Attachments
+
+- Subtasks & Custom Fields
+- Comment Threads & Replies
+- File Attachments
+- @Mentions
+- Rich Text Comments
+- WIP Limits &Swimlanes
 
 =========================================================================
