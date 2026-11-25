@@ -13,7 +13,7 @@
 
     <div class="tf-notice" id="activity-limit" role="note">
         <i class="bi bi-info-circle" aria-hidden="true"></i>
-        <div><strong>Audit logging is not connected yet.</strong> This page is ready to display log entries, but the application has no activity log entity or authenticated user flow. Filters apply to rows already rendered on this page; server-side filtering and full audit export need a connected log store.</div>
+        <div><strong>Audit logging is not connected yet.</strong> This page is protected by the workspace Admin permission. The application has no activity log entity; server-side filtering and full audit export need a connected log store.</div>
     </div>
 
     <article class="tf-card tf-filter-card" aria-label="Activity log filters">
@@ -48,7 +48,7 @@
         </div>
     </article>
 
-    <p class="tf-auth-note"><i class="bi bi-shield-lock" aria-hidden="true"></i> Admin-only access cannot be enforced until authentication and roles are configured in the application.</p>
+    <p class="tf-auth-note"><i class="bi bi-shield-lock" aria-hidden="true"></i> Access is limited to workspace Admins and Owners.</p>
 </section>
 
 @section Styles {
