@@ -19,12 +19,17 @@ namespace TaskFlow_Project_Managment_System.Context
 
         public DbSet<ProjectPermissionSettings> ProjectPermissionSettings { get; set; }
 
+        public DbSet<WorkspaceMember> WorkspaceMembers { get; set; }
+
 
         // Nour-Zoubaa Connection string
         // "Data Source=ZOUBAA\\SQLEXPRESS;Initial Catalog=TaskFlowFP;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30"
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source=ZOUBAA\\SQLEXPRESS;Initial Catalog=TaskFlowFP;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30");
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer("Data Source=ZOUBAA\\SQLEXPRESS;Initial Catalog=TaskFlowFP;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30");
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -103,6 +108,27 @@ namespace TaskFlow_Project_Managment_System.Context
                 e.Property(settings => settings.ViewAccess).IsRequired();
                 e.Property(settings => settings.EditAccess).IsRequired();
                 e.Property(settings => settings.UpdatedAt).IsRequired();
+            });
+
+            modelBuilder.Entity<WorkspaceMember>(e =>
+            {
+                e.ToTable("WorkspaceMembers");
+                e.HasKey(member => member.Id);
+                e.HasIndex(member => new { member.WorkspaceId, member.UserId }).IsUnique();
+                e.Property(member => member.Role)
+                    .HasConversion<string>()
+                    .IsRequired()
+                    .HasMaxLength(20);
+
+                e.HasOne(member => member.Workspace)
+                    .WithMany()
+                    .HasForeignKey(member => member.WorkspaceId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                e.HasOne(member => member.User)
+                    .WithMany()
+                    .HasForeignKey(member => member.UserId)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
 
             modelBuilder.Entity<AllTask>(e =>
