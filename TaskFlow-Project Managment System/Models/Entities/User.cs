@@ -12,8 +12,6 @@ namespace TaskFlow_Project_Managment_System.Models
         public int? WorkspaceId { get; set; }
         public WorkSpace workSpaces { get; set; } = null!;
 
-        public string PasswordHash { get; set; } = string.Empty; // For Authentication
-
 
 
         public ICollection<WorkSpace> OwnedWorkspaces { get; set; } = new List<WorkSpace>();   // "owns"
